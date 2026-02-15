@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>PNG Image – Free Download</title>
+  <meta name="description" content="Download PNG image with transparent background for free." />
+
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/image.css" />
+  <link rel="stylesheet" href="css/search.css" />
+  <link rel="canonical" id="canonicalLink" href="" />
+
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header class="search-header">
+    <div class="search-header-inner">
+
+      <div class="logo">
+        <a href="index.html">
+          <img src="images/logo2.png" alt="PNGfam">
+        </a>
+      </div>
+
+      <div class="search-box right-search">
+        <input type="text" id="searchInput" placeholder="Search PNG images..." />
+        <span class="search-icon">
+          <img src="images/search.png" alt="Search">
+        </span>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- IMAGE PAGE -->
+  <section class="image-wrapper">
+
+    <div class="image-card">
+
+      <div class="image-preview">
+        <img src="images/sample.png" alt="PNG image">
+      </div>
+
+      <div class="title-row">
+        <h1>Loading...</h1>
+        <button class="info-btn" id="infoBtn">ℹ️</button>
+      </div>
+
+      <div class="tags"></div>
+
+      <!-- SEO DESCRIPTION BLOCK -->
+      <div class="image-seo-text">
+        <p id="seoText">
+          Download high-quality PNG image with transparent background. Free for
+          personal and commercial use. Perfect for graphic design, ads, UI design,
+          presentations, and creative projects.
+        </p>
+
+        <ul class="feature-list">
+          <li>✔ Transparent background PNG</li>
+          <li>✔ Free for personal & commercial use</li>
+          <li>✔ High resolution quality</li>
+          <li>✔ No attribution required</li>
+        </ul>
+      </div>
+
+      <a class="download-btn" href="#" download>
+        <img src="images/download.png" alt="Download">
+        <span>Download PNG</span>
+      </a>
+
+    </div>
+
+  </section>
+
+  <!-- RELATED IMAGES -->
+  <section class="related-section">
+    <h2>Related PNG Images</h2>
+
+    <div class="container">
+      <div class="grid">
+        <div class="card skeleton"></div>
+        <div class="card skeleton"></div>
+        <div class="card skeleton"></div>
+        <div class="card skeleton"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INFO MODAL -->
+  <div class="info-modal" id="infoModal">
+    <div class="info-content">
+      <button class="close-icon" id="closeInfo">✕</button>
+      <h3>Image Details</h3>
+      <p>Background: Transparent</p>
+      <p>License: Free for personal & commercial use</p>
+    </div>
+  </div>
+  
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <nav class="footer-links">
+        <a href="/privacy-policy">Privacy Policy</a>
+        <a href="/terms">Terms</a>
+        <a href="/dmca">DMCA</a>
+        <a href="/license">License</a>
+        <a href="/contact">Contact</a>
+      </nav>
+      <p class="footer-copy">© 2026 PNGfam — Free Transparent PNG Images</p>
+    </div>
+  </footer>
+
+</body>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const searchInput = document.getElementById("searchInput");
+  const searchIcon = document.querySelector(".search-icon");
+
+  if (!searchInput) return;
+
+  function doSearch() {
+    const query = searchInput.value.trim();
+    if (!query) return;
+
+    // ✅ CORRECT ROUTE (same as home & search page)
+    window.location.href = `/search?q=${encodeURIComponent(query)}`;
+  }
+
+  searchInput.addEventListener("keydown", e => {
+    if (e.key === "Enter") doSearch();
+  });
+
+  if (searchIcon) {
+    searchIcon.addEventListener("click", doSearch);
+  }
+
+});
+</script>
+
+<!-- INFO MODAL -->
+<script>
+  const infoBtn = document.getElementById('infoBtn');
+  const infoModal = document.getElementById('infoModal');
+  const closeIcon = document.getElementById('closeInfo');
+
+  if (infoBtn) {
+    infoBtn.onclick = () => infoModal.style.display = 'flex';
+    closeIcon.onclick = () => infoModal.style.display = 'none';
+    infoModal.onclick = e => {
+      if (e.target === infoModal) infoModal.style.display = 'none';
+    };
+  }
+</script>
+
+<!-- MAIN IMAGE LOAD -->
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const slug = params.get("slug");
+
+  if (!slug) {
+    window.location.href = "index.html";
+  } else {
+    fetch(`http://localhost:5002/api/pngs/${slug}`)
+      .then(res => {
+        if (!res.ok) throw new Error("Not found");
+        return res.json();
+      })
+      .then(png => {
+
+        /* 🔥 USE PREVIEW / WEBP IMAGE */
+        const img = document.querySelector(".image-preview img");
+
+        /* 🔥 MAIN IMAGE SHOULD USE PREVIEW WEBP */
+        img.src = png.previewUrl || png.originalUrl;
+        img.alt = `${png.title} transparent png`;
+
+        /* Title */
+        function cleanTitle(title) {
+          return title
+            .replace(/png/gi, "")
+            .replace(/transparent/gi, "")
+            .replace(/background/gi, "")
+            .replace(/\s+/g, " ")
+            .trim();
+        }
+
+        const cleanedTitle = cleanTitle(png.title);
+        document.querySelector(".title-row h1").innerText = `${cleanedTitle} PNG Image`;
+
+        const downloadBtn = document.querySelector(".download-btn");
+        downloadBtn.querySelector("span").innerText =
+          `Download PNG ( ${png.width} × ${png.height} )`;
+
+        downloadBtn.addEventListener("click", async (e) => {
+          e.preventDefault();
+
+          try {
+            const response = await fetch(`http://localhost:5002/api/pngs/${png.slug}/download`);
+            const blob = await response.blob();
+
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `${cleanTitle(png.title)}.png`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+          } catch (err) {
+            alert("Download failed. Please try again.");
+          }
+        });
+
+        /* Tags */
+        const tagsBox = document.querySelector(".tags");
+        tagsBox.innerHTML = "";
+        (png.tags || []).forEach(tag => {
+          const span = document.createElement("span");
+          span.innerText = tag;
+          tagsBox.appendChild(span);
+        });
+
+        /* SEO */
+          const seoDescription = `Download ${png.title} PNG with transparent background. 
+          Free HD cutout image for graphic design, ads, posters, websites and creative projects. 
+          No attribution required.`;
+
+          /* Title */
+          document.title = `${png.title} – Free Transparent PNG Download`;
+
+          /* Canonical URL */
+          const canonical = document.getElementById("canonicalLink");
+          if (canonical) {
+            canonical.href = `${window.location.origin}/image/${png.slug}`;
+          }
+
+          /* Meta Description */
+          document
+            .querySelector('meta[name="description"]')
+            .setAttribute("content", seoDescription);
+
+          /* Visible SEO Text */
+          const seoText = document.getElementById("seoText");
+          if (seoText) seoText.innerText = seoDescription;
+
+          /* ================= IMAGE SCHEMA (JSON-LD) ================= */
+
+          const schema = {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "name": png.title,
+            "description": png.description || `Download ${png.title} PNG with transparent background`,
+            "contentUrl": png.originalUrl,
+            "thumbnailUrl": png.previewUrl || png.thumbUrl,
+            "width": png.width,
+            "height": png.height,
+            "fileFormat": "image/png",
+            "license": "https://www.pngfam.com/license",
+            "acquireLicensePage": "https://www.pngfam.com/license",
+            "url": `${window.location.origin}/image/${png.slug}`,
+            "author": {
+              "@type": "Organization",
+              "name": "PNGfam"
+            }
+          };
+
+          /* Inject schema */
+          let scriptTag = document.querySelector("#image-schema");
+          if (!scriptTag) {
+            scriptTag = document.createElement("script");
+            scriptTag.type = "application/ld+json";
+            scriptTag.id = "image-schema";
+            document.head.appendChild(scriptTag);
+          }
+
+          scriptTag.textContent = JSON.stringify(schema);
+ 
+      })
+      .catch(() => {
+        document.querySelector(".image-wrapper").innerHTML =
+          "<p>Failed to load image</p>";
+      });
+  }
+</script>
+
+
+<!-- RELATED IMAGES (SAFE FALLBACK) -->
+<script>
+  if (slug) {
+    fetch(`http://localhost:5002/api/pngs`)
+      .then(res => res.json())
+      .then(data => {
+        const grid = document.querySelector(".related-section .grid");
+        grid.innerHTML = "";
+
+        data
+          .filter(p => p.slug !== slug)
+          .slice(0, 6)
+          .forEach(png => {
+            const card = document.createElement("div");
+            card.className = "card";
+
+            card.innerHTML = `
+              <div class="card-image">
+                <img src="${png.thumbUrl}" alt="${png.title}">
+              </div>
+              <p class="card-title">${png.title}</p>
+            `;
+
+            card.onclick = () => {
+              window.location.href = `image.html?slug=${png.slug}`;
+            };
+
+            grid.appendChild(card);
+          });
+      });
+  }
+</script>

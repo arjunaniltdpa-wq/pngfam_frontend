@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mango PNG Images – Free Download</title>
+  <meta name="description" content="Free Mango PNG images with transparent background. Download high quality mango PNGs." />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/search.css" />
+  <link rel="canonical" id="canonicalLink" href="" />
+
+</head>
+<body>
+
+  <header class="search-header">
+    <div class="search-header-inner">
+
+      <div class="logo">
+        <a href="index.html">
+          <img src="images/logo2.png" alt="PNGfam">
+        </a>
+      </div>
+
+      <div class="search-box right-search">
+        <input type="text" id="searchInput" placeholder="Search PNG images..." />
+        <span class="search-icon">
+          <img src="images/search.png" alt="Search">
+        </span>
+      </div>
+
+    </div>
+  </header>
+
+<section class="results-wrapper">
+
+  <div class="results-header">
+    <span class="result-label">Search result of</span>
+    <h1 id="searchTitle"></h1>
+  </div>
+
+  <!-- SEO TEXT BLOCK -->
+  <div class="search-seo-text">
+    <p id="searchSeoText">
+      Download high-quality PNG images with transparent background. Free HD cutout PNGs for graphic design, ads, posters, websites, and creative projects. No attribution required.
+    </p>
+  </div>
+
+  <main class="container">
+
+    <!-- SEARCH RESULTS -->
+    <div class="grid" id="resultsGrid"></div>
+
+    <!-- SEARCH PAGINATION -->
+    <div class="pagination-wrapper" id="searchPagination" style="display:none;">
+      <button id="nextSearchBtn" class="next-btn">Next →</button>
+    </div>
+
+    <!-- EXPLORE MORE FALLBACK -->
+    <div id="relatedWrapper" style="display:none;">
+      <h2 class="related-title">Explore more PNG images</h2>
+      <div class="grid" id="relatedGrid"></div>
+
+      <div class="explore-btn-wrapper" id="exploreBtnWrapper" style="display:none;">
+        <a href="/search?q=png" class="explore-btn">Explore more →</a>
+      </div>
+    </div>
+</section>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <nav class="footer-links">
+      <a href="/privacy-policy">Privacy Policy</a>
+      <a href="/terms">Terms</a>
+      <a href="/dmca">DMCA</a>
+      <a href="/license">License</a>
+      <a href="/contact">Contact</a>
+    </nav>
+    <p class="footer-copy">© 2026 PNGfam — Free Transparent PNG Images</p>
+  </div>
+</footer>
+<body>
+  
+<script>
+
+function cleanTitle(title) {
+  let cleaned = title
+    .replace(/png transparent background/gi, "")
+    .replace(/transparent background png/gi, "")
+    .replace(/transparent png/gi, "")
+    .replace(/png/gi, "")
+    .replace(/background/gi, "")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  // Add ONE suffix for SEO
+  return cleaned.replace(/\b\w/g, char => char.toUpperCase()) + " Transparent PNG";
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  /* =========================
+     CONFIG
+  ========================== */
+  const API_BASE = "http://localhost:5002";
+  const SEARCH_LIMIT = 50;
+  const EXPLORE_LIMIT = 20;
+
+  let searchPage = 1;
+
+  /* =========================
+     SEARCH QUERY
+  ========================== */
+  const params = new URLSearchParams(window.location.search);
+  const keyword = params.get("q");
+
+  const searchInput = document.getElementById("searchInput");
+  const searchTitle = document.getElementById("searchTitle");
+  const searchIcon = document.querySelector(".search-icon");
+
+  const grid = document.getElementById("resultsGrid");
+  const pagination = document.getElementById("searchPagination");
+  const relatedWrapper = document.getElementById("relatedWrapper");
+  const relatedGrid = document.getElementById("relatedGrid");
+  const exploreBtn = document.getElementById("exploreBtnWrapper");
+
+  let cleanKeyword = "";
+
+  function capitalizeWords(str) {
+    return str.replace(/\b\w/g, char => char.toUpperCase());
+  }
+
+  if (keyword) {
+    cleanKeyword = capitalizeWords(
+      decodeURIComponent(keyword.replace(/\+/g, " "))
+    );
+
+    searchInput.value = cleanKeyword;
+    searchTitle.textContent = `${cleanKeyword} PNG Images`;
+
+    const seoText = `Download high-quality ${cleanKeyword} PNG images with transparent background. 
+  Free HD ${cleanKeyword} cutout PNGs for graphic design, ads, posters, websites, and creative projects. 
+  No attribution required.`;
+
+    document.title = `${cleanKeyword} PNG Images – Free Download`;
+
+    document
+      .querySelector('meta[name="description"]')
+      .setAttribute(
+        "content",
+        `Free ${cleanKeyword} PNG images with transparent background. Download high quality ${cleanKeyword} PNGs.`
+      );
+
+    const seoBlock = document.getElementById("searchSeoText");
+    if (seoBlock) seoBlock.innerText = seoText;
+
+    /* Canonical URL */
+    const canonical = document.getElementById("canonicalLink");
+    if (canonical) {
+      const normalizedKeyword = cleanKeyword.toLowerCase().trim();
+      canonical.href = `${window.location.origin}/search?q=${encodeURIComponent(normalizedKeyword)}`;
+    }
+
+  } else {
+    searchTitle.textContent = "All PNG Images";
+  }
+
+  /* =========================
+     SEARCH BAR
+  ========================== */
+  function doSearch() {
+    const q = searchInput.value.trim();
+    if (!q) return;
+    window.location.href = `/search?q=${encodeURIComponent(q)}`;
+  }
+
+  searchInput.addEventListener("keydown", e => {
+    if (e.key === "Enter") doSearch();
+  });
+
+  searchIcon.addEventListener("click", doSearch);
+
+  /* =========================
+     CARD
+  ========================== */
+  function renderCard(png, target) {
+    const title = cleanTitle(png.title);
+
+    const card = document.createElement("a");
+    card.href = `image.html?slug=${png.slug}`;
+    card.className = "card image-card-box";
+    card.innerHTML = `
+      <div class="card-image checker-bg">
+        <img src="${png.thumbUrl}" alt="${title}" loading="lazy">
+      </div>
+      <h3 class="card-title">${title}</h3>
+    `;
+    target.appendChild(card);
+  }
+
+  /* =========================
+     SEARCH RESULTS (50)
+  ========================== */
+  function loadSearchResults() {
+    let url = `${API_BASE}/api/pngs?limit=${SEARCH_LIMIT}&page=${searchPage}`;
+    if (cleanKeyword) {
+      url += `&search=${encodeURIComponent(cleanKeyword)}`;
+    }
+
+    fetch(url)
+      .then(res => res.json())
+      .then(data => {
+
+        if (!data.length && searchPage === 1) {
+          grid.innerHTML = `
+            <p class="no-results">
+              No PNG images found for "<strong>${cleanKeyword}</strong>"
+            </p>
+          `;
+          loadExploreMore();
+          return;
+        }
+
+        data.forEach(png => renderCard(png, grid));
+
+        pagination.style.display =
+          data.length === SEARCH_LIMIT ? "block" : "none";
+      });
+  }
+
+  document.getElementById("nextSearchBtn").addEventListener("click", () => {
+    searchPage++;
+    loadSearchResults();
+  });
+
+  /* =========================
+     EXPLORE MORE (20)
+  ========================== */
+  function loadExploreMore() {
+    relatedWrapper.style.display = "block";
+    relatedGrid.innerHTML = "";
+
+    fetch(`${API_BASE}/api/pngs?limit=${EXPLORE_LIMIT}`)
+      .then(res => res.json())
+      .then(data => {
+        data.forEach(png => renderCard(png, relatedGrid));
+        exploreBtn.style.display = "block";
+      });
+  }
+
+  /* =========================
+     INIT
+  ========================== */
+  loadSearchResults();
+
+});
+</script>

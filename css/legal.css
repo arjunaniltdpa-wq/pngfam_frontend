@@ -1,0 +1,95 @@
+/* Background */
+body {
+  background: linear-gradient(180deg, #f6f8fc 0%, #eef2f7 100%);
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Wrapper (centered) */
+.legal-wrapper {
+  max-width: 900px;
+  margin: 70px auto 80px;
+  padding: 0 20px;
+  text-align: center;
+}
+
+/* Card */
+.legal-card {
+  background: #ffffff;
+  border-radius: 22px;
+  padding: 55px 60px;
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.06);
+  line-height: 1.9;
+  transition: all 0.35s ease;
+  text-align: left;
+}
+
+/* Premium hover depth */
+.legal-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 35px 90px rgba(0, 0, 0, 0.08);
+}
+
+/* Main title */
+.legal-card h1 {
+  font-size: 40px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  margin-bottom: 8px;
+  color: #0f172a;
+  text-align: center;
+}
+
+/* Date */
+.legal-date {
+  display: block;
+  text-align: center;
+  font-size: 15px;
+  color: #94a3b8;
+  margin-bottom: 35px;
+}
+
+/* Section titles */
+.legal-card h2 {
+  margin-top: 40px;
+  font-size: 24px;
+  font-weight: 600;
+  color: #1e293b;
+  position: relative;
+  padding-left: 16px;
+}
+
+/* Decorative left bar */
+.legal-card h2::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 8px;
+  height: 18px;
+  width: 4px;
+  border-radius: 4px;
+  background: linear-gradient(180deg, #3b82f6, #6366f1);
+}
+
+/* Paragraph */
+.legal-card p {
+  color: #475569;
+  margin: 14px 0;
+  font-size: 16px;
+}
+
+/* Lists */
+.legal-card ul {
+  padding-left: 22px;
+  margin-top: 10px;
+  color: #475569;
+}
+
+.legal-card li {
+  margin: 10px 0;
+  font-size: 16px;
+}
+
+/* Highlight email */
+.legal-card strong {
+  color: #0f172a;
+}

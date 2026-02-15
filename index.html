@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Free Transparent PNG Images Download – High Quality PNGs | PNGfam</title>
+  <meta name="description" content="Download free transparent PNG images in high quality. Explore thousands of HD PNG cutouts for graphic design, ads, websites, and creative projects." />
+  <link rel="stylesheet" href="css/style.css" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "PNGfam",
+    "url": "https://www.pngfam.com/",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://www.pngfam.com/search?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    },
+    "description": "Download free transparent PNG images in high quality. Explore thousands of HD PNG cutouts for design, ads, and websites."
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "PNGfam",
+    "url": "https://www.pngfam.com/",
+    "logo": "https://www.pngfam.com/images/logo.png"
+  }
+  </script>
+
+</head>
+
+<body>
+  <header class="header">
+    <img src="images/banner.png" alt="PNGfam banner" class="header-banner">
+
+    <div class="header-inner">
+
+      <div class="logo">
+        <a href="/">
+          <img src="images/logo.png" alt="PNGfam logo">
+        </a>
+      </div>
+
+      <!-- SEARCH + CATEGORIES WRAPPER -->
+      <div class="search-wrapper">
+
+        <div class="search-box">
+          <input type="text" id="homeSearchInput" placeholder="Search PNG images..." />
+          <span class="search-icon">
+            <img src="images/search.png" alt="Search">
+          </span>
+        </div>
+
+        <!-- ✅ CATEGORIES NOW INSIDE HEADER -->
+        <div class="categories">
+          <button data-cat="Logo PNG">Logo</button>
+          <button data-cat="Icons PNG">Icons</button>
+          <button data-cat="Animals PNG">Animals</button>
+          <button data-cat="Flowers PNG">Flowers</button>
+          <button data-cat="Food PNG">Food</button>
+          <button data-cat="Cartoon PNG">Cartoon</button>
+          <button data-cat="Text PNG">Text</button>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- TITLE -->
+  <section class="section-title">
+    <h1>Free Transparent PNG Images Download for Designers</h1>
+  </section>
+
+  <!-- IMAGE GRID -->
+  <main class="container">
+    <div class="masonry" id="pngGrid"></div>
+  </main>
+
+  <div id="loader">Loading more...</div>
+  
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <nav class="footer-links">
+        <a href="/privacy-policy">Privacy Policy</a>
+        <a href="/terms">Terms</a>
+        <a href="/dmca">DMCA</a>
+        <a href="/license">License</a>
+        <a href="/contact">Contact</a>
+      </nav>
+      <p class="footer-copy">© 2026 PNGfam — Free Transparent PNG Images</p>
+    </div>
+  </footer>
+
+</body>
+
+<script>
+  const searchInput = document.getElementById('homeSearchInput');
+  const searchIcon = document.querySelector('.search-icon');
+
+  function handleSearch() {
+    const query = searchInput.value.trim();
+    if (query !== "") {
+      const encodedQuery = encodeURIComponent(query);
+      window.location.href = `/search?q=${encodedQuery}`;
+    }
+  }
+
+  // Enter key
+  searchInput.addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  });
+
+  // Click icon
+  searchIcon.addEventListener('click', handleSearch);
+</script>
+
+<script>
+  document.querySelectorAll('.categories button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const query = encodeURIComponent(btn.dataset.cat);
+      window.location.href = `/search?q=${query}`;
+    });
+  });
+</script>
+
+<script>
+function cleanTitle(title) {
+  const cleaned = title
+    .replace(/png/gi, "")
+    .replace(/transparent/gi, "")
+    .replace(/background/gi, "")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  return cleaned.replace(/\b\w/g, char => char.toUpperCase());
+}
+</script>
+
+<script>
+const grid = document.getElementById("pngGrid");
+
+fetch("http://localhost:5002/api/pngs")
+  .then(res => res.json())
+  .then(data => {
+    if (!Array.isArray(data)) {
+      console.error("API did not return array", data);
+      return;
+    }
+
+    data.forEach(png => {
+      const link = document.createElement("a");
+      link.href = `image.html?slug=${png.slug}`;
+      link.className = "card-link";
+
+      link.innerHTML = `
+        <div class="card png-bg">
+          <div class="card-image">
+            <img 
+              src="${png.thumbUrl}" 
+              alt="${cleanTitle(png.title)} transparent png" 
+              loading="lazy"
+              class="grid-image"
+            >
+          </div>
+          <div class="card-title">${cleanTitle(png.title)}</div>
+        </div>
+      `;
+
+      grid.appendChild(link);
+    });
+
+  })
+  .catch(err => console.error("Failed to load PNGs", err));
+</script>
+
+<script>
+let page = 1;
+let loading = false;
+
+window.addEventListener('scroll', () => {
+  if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 300 && !loading) {
+    loadMoreImages();
+  }
+});
+
+function loadMoreImages() {
+  loading = true;
+  document.getElementById('loader').style.display = 'block';
+
+  // simulate API
+  setTimeout(() => {
+    page++;
+    // fetch(`/api/images?page=${page}&sort=popular`)
+    // append cards to .grid
+    loading = false;
+    document.getElementById('loader').style.display = 'none';
+  }, 1000);
+}
+</script>
+
+</html>

@@ -12,6 +12,11 @@
   <link rel="stylesheet" href="css/search.css" />
   <link rel="canonical" id="canonicalLink" href="" />
 
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Free Transparent PNG Image Download">
+  <meta property="og:description" content="Download high-quality PNG with transparent background.">
+  <meta name="twitter:card" content="summary_large_image">
+
 </head>
 
 <body>
@@ -289,8 +294,35 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelector(".image-wrapper").innerHTML =
           "<p>Failed to load image</p>";
       });
+
+      // OG IMAGE
+      let ogImage = document.querySelector('meta[property="og:image"]');
+      if (!ogImage) {
+        ogImage = document.createElement("meta");
+        ogImage.setAttribute("property", "og:image");
+        document.head.appendChild(ogImage);
+      }
+      ogImage.setAttribute(
+        "content",
+        `${API}/api/og/${png.slug}`
+      );
+
+      // Twitter
+      let twitterImage = document.querySelector('meta[name="twitter:image"]');
+      if (!twitterImage) {
+        twitterImage = document.createElement("meta");
+        twitterImage.setAttribute("name", "twitter:image");
+        document.head.appendChild(twitterImage);
+      }
+      twitterImage.setAttribute(
+        "content",
+        `${API}/api/og/${png.slug}`
+      );
+
   }
 </script>
+
+
 <!-- RELATED IMAGES (SAFE FALLBACK) -->
 <script>
   const params2 = new URLSearchParams(window.location.search);

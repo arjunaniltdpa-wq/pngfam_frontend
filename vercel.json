@@ -1,6 +1,14 @@
 {
-  "routes": [
-    { "src": "/search", "dest": "/search.html" },
-    { "src": "/image", "dest": "/image.html" }
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/search", "destination": "/search.html" },
+    { "source": "/image/:slug", "destination": "/image.html" },
+
+    { "source": "/privacy-policy", "destination": "/privacy-policy.html" },
+    { "source": "/terms", "destination": "/terms.html" },
+    { "source": "/dmca", "destination": "/dmca.html" },
+    { "source": "/license", "destination": "/license.html" },
+    { "source": "/contact", "destination": "/contact.html" }
   ]
 }

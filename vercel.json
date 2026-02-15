@@ -1,0 +1,6 @@
+{
+  "routes": [
+    { "src": "/search", "dest": "/search.html" },
+    { "src": "/image", "dest": "/image.html" }
+  ]
+}

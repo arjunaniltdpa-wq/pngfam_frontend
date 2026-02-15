@@ -78,8 +78,7 @@
     <p class="footer-copy">© 2026 PNGfam — Free Transparent PNG Images</p>
   </div>
 </footer>
-<body>
-  
+
 <script>
 
 function cleanTitle(title) {
@@ -101,156 +100,157 @@ document.addEventListener("DOMContentLoaded", () => {
   /* =========================
      CONFIG
   ========================== */
-  const API_BASE = "http://localhost:5002";
-  const SEARCH_LIMIT = 50;
-  const EXPLORE_LIMIT = 20;
+const API_BASE = "https://pngfam-backend.onrender.com";
+const SEARCH_LIMIT = 50;
+const EXPLORE_LIMIT = 20;
 
-  let searchPage = 1;
+let searchPage = 1;
 
-  /* =========================
-     SEARCH QUERY
-  ========================== */
-  const params = new URLSearchParams(window.location.search);
-  const keyword = params.get("q");
 
-  const searchInput = document.getElementById("searchInput");
-  const searchTitle = document.getElementById("searchTitle");
-  const searchIcon = document.querySelector(".search-icon");
+/* =========================
+    SEARCH QUERY
+========================== */
+const params = new URLSearchParams(window.location.search);
+const keyword = params.get("q");
 
-  const grid = document.getElementById("resultsGrid");
-  const pagination = document.getElementById("searchPagination");
-  const relatedWrapper = document.getElementById("relatedWrapper");
-  const relatedGrid = document.getElementById("relatedGrid");
-  const exploreBtn = document.getElementById("exploreBtnWrapper");
+const searchInput = document.getElementById("searchInput");
+const searchTitle = document.getElementById("searchTitle");
+const searchIcon = document.querySelector(".search-icon");
 
-  let cleanKeyword = "";
+const grid = document.getElementById("resultsGrid");
+const pagination = document.getElementById("searchPagination");
+const relatedWrapper = document.getElementById("relatedWrapper");
+const relatedGrid = document.getElementById("relatedGrid");
+const exploreBtn = document.getElementById("exploreBtnWrapper");
 
-  function capitalizeWords(str) {
-    return str.replace(/\b\w/g, char => char.toUpperCase());
-  }
+let cleanKeyword = "";
 
-  if (keyword) {
-    cleanKeyword = capitalizeWords(
-      decodeURIComponent(keyword.replace(/\+/g, " "))
+function capitalizeWords(str) {
+  return str.replace(/\b\w/g, char => char.toUpperCase());
+}
+
+if (keyword) {
+  cleanKeyword = capitalizeWords(
+    decodeURIComponent(keyword.replace(/\+/g, " "))
+  );
+
+  searchInput.value = cleanKeyword;
+  searchTitle.textContent = `${cleanKeyword} PNG Images`;
+
+  const seoText = `Download high-quality ${cleanKeyword} PNG images with transparent background. 
+Free HD ${cleanKeyword} cutout PNGs for graphic design, ads, posters, websites, and creative projects. 
+No attribution required.`;
+
+  document.title = `${cleanKeyword} PNG Images – Free Download`;
+
+  document
+    .querySelector('meta[name="description"]')
+    .setAttribute(
+      "content",
+      `Free ${cleanKeyword} PNG images with transparent background. Download high quality ${cleanKeyword} PNGs.`
     );
 
-    searchInput.value = cleanKeyword;
-    searchTitle.textContent = `${cleanKeyword} PNG Images`;
+  const seoBlock = document.getElementById("searchSeoText");
+  if (seoBlock) seoBlock.innerText = seoText;
 
-    const seoText = `Download high-quality ${cleanKeyword} PNG images with transparent background. 
-  Free HD ${cleanKeyword} cutout PNGs for graphic design, ads, posters, websites, and creative projects. 
-  No attribution required.`;
-
-    document.title = `${cleanKeyword} PNG Images – Free Download`;
-
-    document
-      .querySelector('meta[name="description"]')
-      .setAttribute(
-        "content",
-        `Free ${cleanKeyword} PNG images with transparent background. Download high quality ${cleanKeyword} PNGs.`
-      );
-
-    const seoBlock = document.getElementById("searchSeoText");
-    if (seoBlock) seoBlock.innerText = seoText;
-
-    /* Canonical URL */
-    const canonical = document.getElementById("canonicalLink");
-    if (canonical) {
-      const normalizedKeyword = cleanKeyword.toLowerCase().trim();
-      canonical.href = `${window.location.origin}/search?q=${encodeURIComponent(normalizedKeyword)}`;
-    }
-
-  } else {
-    searchTitle.textContent = "All PNG Images";
+  /* Canonical URL */
+  const canonical = document.getElementById("canonicalLink");
+  if (canonical) {
+    const normalizedKeyword = cleanKeyword.toLowerCase().trim();
+    canonical.href = `${window.location.origin}/search?q=${encodeURIComponent(normalizedKeyword)}`;
   }
 
-  /* =========================
-     SEARCH BAR
-  ========================== */
-  function doSearch() {
-    const q = searchInput.value.trim();
-    if (!q) return;
-    window.location.href = `/search?q=${encodeURIComponent(q)}`;
+} else {
+  searchTitle.textContent = "All PNG Images";
+}
+
+/* =========================
+    SEARCH BAR
+========================== */
+function doSearch() {
+  const q = searchInput.value.trim();
+  if (!q) return;
+  window.location.href = `/search?q=${encodeURIComponent(q)}`;
+}
+
+searchInput.addEventListener("keydown", e => {
+  if (e.key === "Enter") doSearch();
+});
+
+searchIcon.addEventListener("click", doSearch);
+
+/* =========================
+    CARD
+========================== */
+function renderCard(png, target) {
+  const title = cleanTitle(png.title);
+
+  const card = document.createElement("a");
+  card.href = `image.html?slug=${png.slug}`;
+  card.className = "card image-card-box";
+  card.innerHTML = `
+    <div class="card-image checker-bg">
+      <img src="${png.thumbUrl}" alt="${title}" loading="lazy">
+    </div>
+    <h3 class="card-title">${title}</h3>
+  `;
+  target.appendChild(card);
+}
+
+/* =========================
+    SEARCH RESULTS (50)
+========================== */
+function loadSearchResults() {
+  let url = `${API_BASE}/api/pngs?limit=${SEARCH_LIMIT}&page=${searchPage}`;
+  if (cleanKeyword) {
+    url += `&search=${encodeURIComponent(cleanKeyword)}`;
   }
 
-  searchInput.addEventListener("keydown", e => {
-    if (e.key === "Enter") doSearch();
-  });
+  fetch(url)
+    .then(res => res.json())
+    .then(data => {
 
-  searchIcon.addEventListener("click", doSearch);
+      if (!data.length && searchPage === 1) {
+        grid.innerHTML = `
+          <p class="no-results">
+            No PNG images found for "<strong>${cleanKeyword}</strong>"
+          </p>
+        `;
+        loadExploreMore();
+        return;
+      }
 
-  /* =========================
-     CARD
-  ========================== */
-  function renderCard(png, target) {
-    const title = cleanTitle(png.title);
+      data.forEach(png => renderCard(png, grid));
 
-    const card = document.createElement("a");
-    card.href = `image.html?slug=${png.slug}`;
-    card.className = "card image-card-box";
-    card.innerHTML = `
-      <div class="card-image checker-bg">
-        <img src="${png.thumbUrl}" alt="${title}" loading="lazy">
-      </div>
-      <h3 class="card-title">${title}</h3>
-    `;
-    target.appendChild(card);
-  }
+      pagination.style.display =
+        data.length === SEARCH_LIMIT ? "block" : "none";
+    });
+}
 
-  /* =========================
-     SEARCH RESULTS (50)
-  ========================== */
-  function loadSearchResults() {
-    let url = `${API_BASE}/api/pngs?limit=${SEARCH_LIMIT}&page=${searchPage}`;
-    if (cleanKeyword) {
-      url += `&search=${encodeURIComponent(cleanKeyword)}`;
-    }
-
-    fetch(url)
-      .then(res => res.json())
-      .then(data => {
-
-        if (!data.length && searchPage === 1) {
-          grid.innerHTML = `
-            <p class="no-results">
-              No PNG images found for "<strong>${cleanKeyword}</strong>"
-            </p>
-          `;
-          loadExploreMore();
-          return;
-        }
-
-        data.forEach(png => renderCard(png, grid));
-
-        pagination.style.display =
-          data.length === SEARCH_LIMIT ? "block" : "none";
-      });
-  }
-
-  document.getElementById("nextSearchBtn").addEventListener("click", () => {
-    searchPage++;
-    loadSearchResults();
-  });
-
-  /* =========================
-     EXPLORE MORE (20)
-  ========================== */
-  function loadExploreMore() {
-    relatedWrapper.style.display = "block";
-    relatedGrid.innerHTML = "";
-
-    fetch(`${API_BASE}/api/pngs?limit=${EXPLORE_LIMIT}`)
-      .then(res => res.json())
-      .then(data => {
-        data.forEach(png => renderCard(png, relatedGrid));
-        exploreBtn.style.display = "block";
-      });
-  }
-
-  /* =========================
-     INIT
-  ========================== */
+document.getElementById("nextSearchBtn").addEventListener("click", () => {
+  searchPage++;
   loadSearchResults();
+});
+
+/* =========================
+    EXPLORE MORE (20)
+========================== */
+function loadExploreMore() {
+  relatedWrapper.style.display = "block";
+  relatedGrid.innerHTML = "";
+
+  fetch(`${API_BASE}/api/pngs?limit=${EXPLORE_LIMIT}`)
+    .then(res => res.json())
+    .then(data => {
+      data.forEach(png => renderCard(png, relatedGrid));
+      exploreBtn.style.display = "block";
+    });
+}
+
+/* =========================
+    INIT
+========================== */
+loadSearchResults();
 
 });
 </script>

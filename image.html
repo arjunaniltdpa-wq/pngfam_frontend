@@ -116,6 +116,9 @@
 
 </body>
 <script>
+
+const API = "https://pngfam-backend.onrender.com";
+
 document.addEventListener("DOMContentLoaded", () => {
 
   const searchInput = document.getElementById("searchInput");
@@ -165,7 +168,8 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!slug) {
     window.location.href = "index.html";
   } else {
-    fetch(`http://localhost:5002/api/pngs/${slug}`)
+
+    fetch(`${API}/api/pngs/${slug}`)
       .then(res => {
         if (!res.ok) throw new Error("Not found");
         return res.json();
@@ -200,7 +204,7 @@ document.addEventListener("DOMContentLoaded", () => {
           e.preventDefault();
 
           try {
-            const response = await fetch(`http://localhost:5002/api/pngs/${png.slug}/download`);
+            const response = await fetch(`${API}/api/pngs/${png.slug}/download`)
             const blob = await response.blob();
 
             const url = window.URL.createObjectURL(blob);
@@ -287,19 +291,20 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   }
 </script>
-
-
 <!-- RELATED IMAGES (SAFE FALLBACK) -->
 <script>
-  if (slug) {
-    fetch(`http://localhost:5002/api/pngs`)
+  const params2 = new URLSearchParams(window.location.search);
+  const slug2 = params2.get("slug");
+
+  if (slug2) {
+    fetch(`${API}/api/pngs`)
       .then(res => res.json())
       .then(data => {
         const grid = document.querySelector(".related-section .grid");
         grid.innerHTML = "";
 
         data
-          .filter(p => p.slug !== slug)
+          .filter(p => p.slug !== slug2)
           .slice(0, 6)
           .forEach(png => {
             const card = document.createElement("div");
@@ -321,3 +326,4 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   }
 </script>
+

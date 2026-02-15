@@ -98,6 +98,11 @@
 </body>
 
 <script>
+  const API = "https://pngfam-backend.onrender.com";
+</script>
+
+<script>
+
   const searchInput = document.getElementById('homeSearchInput');
   const searchIcon = document.querySelector('.search-icon');
 
@@ -145,7 +150,7 @@ function cleanTitle(title) {
 <script>
 const grid = document.getElementById("pngGrid");
 
-fetch("http://localhost:5002/api/pngs")
+fetch(`${API}/api/pngs`)
   .then(res => res.json())
   .then(data => {
     if (!Array.isArray(data)) {

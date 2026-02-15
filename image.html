@@ -167,11 +167,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 <!-- MAIN IMAGE LOAD -->
 <script>
-  const slug = window.location.pathname.split("/image/")[1];
-
-  if (!slug) {
-    window.location.href = "/";
-  }
+  const params = new URLSearchParams(window.location.search);
+  const slug = params.get("slug");
 
   if (!slug) {
     window.location.href = "index.html";

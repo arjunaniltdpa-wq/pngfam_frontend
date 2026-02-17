@@ -183,46 +183,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
         /* 🔥 USE PREVIEW / WEBP IMAGE */
         const img = document.querySelector(".image-preview img");
+        
+        document.querySelector(".title-row h1").innerText = png.title;
 
         /* 🔥 MAIN IMAGE SHOULD USE PREVIEW WEBP */
         img.src = png.previewUrl || png.originalUrl;
         img.alt = `${png.title} transparent png`;
 
-        /* Title */
-        function cleanTitle(title) {
-          return title
-            .replace(/png/gi, "")
-            .replace(/transparent/gi, "")
-            .replace(/background/gi, "")
-            .replace(/\s+/g, " ")
-            .trim();
-        }
-
-        const cleanedTitle = cleanTitle(png.title);
-        document.querySelector(".title-row h1").innerText = `${cleanedTitle} PNG Image`;
-
         const downloadBtn = document.querySelector(".download-btn");
+
+        downloadBtn.href = "#";
+
         downloadBtn.querySelector("span").innerText =
-          `Download PNG ( ${png.width} × ${png.height} )`;
+          `Download PNG (${png.width} × ${png.height})`;
 
-        downloadBtn.addEventListener("click", async (e) => {
-          e.preventDefault();
-
-          try {
-            const response = await fetch(`${API}/api/pngs/${png.slug}/download`)
-            const blob = await response.blob();
-
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = `${cleanTitle(png.title)}.png`;
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-            window.URL.revokeObjectURL(url);
-          } catch (err) {
-            alert("Download failed. Please try again.");
-          }
+        downloadBtn.addEventListener("click", () => {
+          const link = document.createElement("a");
+          link.href = `${API}/api/pngs/${png.slug}/download`;
+          link.download = `${png.title}.png`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
         });
 
         /* Tags */
@@ -288,36 +269,30 @@ document.addEventListener("DOMContentLoaded", () => {
           }
 
           scriptTag.textContent = JSON.stringify(schema);
- 
+
+          /* OG IMAGE */
+          let ogImage = document.querySelector('meta[property="og:image"]');
+          if (!ogImage) {
+            ogImage = document.createElement("meta");
+            ogImage.setAttribute("property", "og:image");
+            document.head.appendChild(ogImage);
+          }
+          ogImage.setAttribute("content", png.previewUrl || png.thumbUrl);
+
+          /* Twitter */
+          let twitterImage = document.querySelector('meta[name="twitter:image"]');
+          if (!twitterImage) {
+            twitterImage = document.createElement("meta");
+            twitterImage.setAttribute("name", "twitter:image");
+            document.head.appendChild(twitterImage);
+          }
+          twitterImage.setAttribute("content", png.previewUrl || png.thumbUrl);
+            
       })
       .catch(() => {
         document.querySelector(".image-wrapper").innerHTML =
           "<p>Failed to load image</p>";
       });
-
-      // OG IMAGE
-      let ogImage = document.querySelector('meta[property="og:image"]');
-      if (!ogImage) {
-        ogImage = document.createElement("meta");
-        ogImage.setAttribute("property", "og:image");
-        document.head.appendChild(ogImage);
-      }
-      ogImage.setAttribute(
-        "content",
-        `${API}/api/og/${png.slug}`
-      );
-
-      // Twitter
-      let twitterImage = document.querySelector('meta[name="twitter:image"]');
-      if (!twitterImage) {
-        twitterImage = document.createElement("meta");
-        twitterImage.setAttribute("name", "twitter:image");
-        document.head.appendChild(twitterImage);
-      }
-      twitterImage.setAttribute(
-        "content",
-        `${API}/api/og/${png.slug}`
-      );
 
   }
 </script>

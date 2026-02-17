@@ -135,19 +135,6 @@
 </script>
 
 <script>
-function cleanTitle(title) {
-  const cleaned = title
-    .replace(/png/gi, "")
-    .replace(/transparent/gi, "")
-    .replace(/background/gi, "")
-    .replace(/\s+/g, " ")
-    .trim();
-
-  return cleaned.replace(/\b\w/g, char => char.toUpperCase());
-}
-</script>
-
-<script>
 const grid = document.getElementById("pngGrid");
 
 fetch(`${API}/api/pngs`)
@@ -168,12 +155,12 @@ fetch(`${API}/api/pngs`)
           <div class="card-image">
             <img 
               src="${png.thumbUrl}" 
-              alt="${cleanTitle(png.title)} transparent png" 
+              alt="${png.title}" 
               loading="lazy"
               class="grid-image"
             >
           </div>
-          <div class="card-title">${cleanTitle(png.title)}</div>
+          <div class="card-title">${png.title}</div>
         </div>
       `;
 

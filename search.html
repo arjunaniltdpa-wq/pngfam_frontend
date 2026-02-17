@@ -81,20 +81,6 @@
   
 <script>
 
-function cleanTitle(title) {
-  let cleaned = title
-    .replace(/png transparent background/gi, "")
-    .replace(/transparent background png/gi, "")
-    .replace(/transparent png/gi, "")
-    .replace(/png/gi, "")
-    .replace(/background/gi, "")
-    .replace(/\s+/g, " ")
-    .trim();
-
-  // Add ONE suffix for SEO
-  return cleaned.replace(/\b\w/g, char => char.toUpperCase()) + " Transparent PNG";
-}
-
 document.addEventListener("DOMContentLoaded", () => {
 
   /* =========================
@@ -183,7 +169,7 @@ searchIcon.addEventListener("click", doSearch);
     CARD
 ========================== */
 function renderCard(png, target) {
-  const title = cleanTitle(png.title);
+  const title = png.title;
 
   const card = document.createElement("a");
   card.href = `image.html?slug=${png.slug}`;

@@ -192,19 +192,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const downloadBtn = document.querySelector(".download-btn");
 
-        downloadBtn.href = "#";
+        downloadBtn.href = `${API}/api/pngs/${png.slug}/download`;
+        downloadBtn.removeAttribute("download"); // important
 
         downloadBtn.querySelector("span").innerText =
           `Download PNG (${png.width} × ${png.height})`;
-
-        downloadBtn.addEventListener("click", () => {
-          const link = document.createElement("a");
-          link.href = `${API}/api/pngs/${png.slug}/download`;
-          link.download = `${png.title}.png`;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-        });
 
         /* Tags */
         const tagsBox = document.querySelector(".tags");

@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+
+# Disallow internal API routes
+Disallow: /api/
+
+# Allow image crawling
+Allow: /image/
+Allow: /search
+
+# Sitemap location
+Sitemap: https://www.pngfam.com/sitemap.xml

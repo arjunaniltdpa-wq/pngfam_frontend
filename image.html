@@ -189,6 +189,8 @@ document.addEventListener("DOMContentLoaded", () => {
         /* 🔥 MAIN IMAGE SHOULD USE PREVIEW WEBP */
         img.src = png.previewUrl || png.originalUrl;
         img.alt = `${png.title} transparent png`;
+        img.loading = "eager";
+        img.decoding = "async";
 
         const downloadBtn = document.querySelector(".download-btn");
 
@@ -218,7 +220,7 @@ document.addEventListener("DOMContentLoaded", () => {
           /* Canonical URL */
           const canonical = document.getElementById("canonicalLink");
           if (canonical) {
-            canonical.href = `${window.location.origin}/image/${png.slug}`;
+            canonical.href = `${window.location.origin}/image.html?slug=${png.slug}`;
           }
 
           /* Meta Description */
@@ -244,7 +246,7 @@ document.addEventListener("DOMContentLoaded", () => {
             "fileFormat": "image/png",
             "license": "https://www.pngfam.com/license",
             "acquireLicensePage": "https://www.pngfam.com/license",
-            "url": `${window.location.origin}/image/${png.slug}`,
+            "url": `${window.location.origin}/image.html?slug=${png.slug}`,
             "author": {
               "@type": "Organization",
               "name": "PNGfam"
@@ -271,6 +273,31 @@ document.addEventListener("DOMContentLoaded", () => {
           }
           ogImage.setAttribute("content", png.previewUrl || png.thumbUrl);
 
+          /* OG IMAGE WIDTH & HEIGHT */
+          let ogWidth = document.querySelector('meta[property="og:image:width"]');
+          if (!ogWidth) {
+            ogWidth = document.createElement("meta");
+            ogWidth.setAttribute("property", "og:image:width");
+            document.head.appendChild(ogWidth);
+          }
+          ogWidth.setAttribute("content", png.width);
+
+          let ogHeight = document.querySelector('meta[property="og:image:height"]');
+          if (!ogHeight) {
+            ogHeight = document.createElement("meta");
+            ogHeight.setAttribute("property", "og:image:height");
+            document.head.appendChild(ogHeight);
+          }
+          ogHeight.setAttribute("content", png.height);
+
+          let linkImageSrc = document.querySelector('link[rel="image_src"]');
+          if (!linkImageSrc) {
+            linkImageSrc = document.createElement("link");
+            linkImageSrc.setAttribute("rel", "image_src");
+            document.head.appendChild(linkImageSrc);
+          }
+          linkImageSrc.setAttribute("href", png.previewUrl || png.thumbUrl);
+
           /* Twitter */
           let twitterImage = document.querySelector('meta[name="twitter:image"]');
           if (!twitterImage) {
@@ -279,6 +306,12 @@ document.addEventListener("DOMContentLoaded", () => {
             document.head.appendChild(twitterImage);
           }
           twitterImage.setAttribute("content", png.previewUrl || png.thumbUrl);
+
+          const preload = document.createElement("link");
+          preload.rel = "preload";
+          preload.as = "image";
+          preload.href = png.previewUrl || png.thumbUrl;
+          document.head.appendChild(preload);
             
       })
       .catch(() => {

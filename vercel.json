@@ -16,8 +16,12 @@
       "destination": "https://pngfam-backend.onrender.com/sitemap.xml"
     },
     {
-      "source": "/sitemap-images.xml",
-      "destination": "https://pngfam-backend.onrender.com/sitemap-images.xml"
+      "source": "/sitemap-static.xml",
+      "destination": "https://pngfam-backend.onrender.com/sitemap-static.xml"
+    },
+    {
+      "source": "/sitemap-images-:page.xml",
+      "destination": "https://pngfam-backend.onrender.com/sitemap-images-:page.xml"
     }
   ]
 }

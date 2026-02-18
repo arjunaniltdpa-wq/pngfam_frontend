@@ -9,6 +9,15 @@
     { "source": "/terms", "destination": "/terms.html" },
     { "source": "/dmca", "destination": "/dmca.html" },
     { "source": "/license", "destination": "/license.html" },
-    { "source": "/contact", "destination": "/contact.html" }
+    { "source": "/contact", "destination": "/contact.html" },
+
+    {
+      "source": "/sitemap.xml",
+      "destination": "https://pngfam-backend.onrender.com/sitemap.xml"
+    },
+    {
+      "source": "/sitemap-images.xml",
+      "destination": "https://pngfam-backend.onrender.com/sitemap-images.xml"
+    }
   ]
 }

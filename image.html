@@ -167,10 +167,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
 <!-- MAIN IMAGE LOAD -->
 <script>
-  const slug = window.location.pathname.split("/image/")[1];
+/* STEP 2: Get slug safely from URL */
+  const slug = window.location.pathname
+    .replace(/^\/image\//, "")
+    .replace(/\/$/, "");
 
   if (!slug) {
-    window.location.href = "index.html";
+    console.error("Slug not found in URL");
   } else {
 
     fetch(`${API}/api/pngs/${slug}`)
@@ -180,12 +183,10 @@ document.addEventListener("DOMContentLoaded", () => {
       })
       .then(png => {
 
-        /* 🔥 USE PREVIEW / WEBP IMAGE */
         const img = document.getElementById("mainPreview");
-        
+
         document.querySelector(".title-row h1").innerText = png.title;
 
-        /* 🔥 MAIN IMAGE SHOULD USE PREVIEW WEBP */
         img.src = png.previewUrl || png.originalUrl;
         img.alt = `${png.title} transparent png`;
         img.loading = "eager";
@@ -321,10 +322,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 </script>
 
-
 <!-- RELATED IMAGES (SAFE FALLBACK) -->
 <script>
-  const slug2 = window.location.pathname.split("/image/")[1];
+  const pathParts2 = window.location.pathname.split("/").filter(Boolean);
+  const slug2 = pathParts2[pathParts2.indexOf("image") + 1];
 
   if (slug2) {
     fetch(`${API}/api/pngs`)

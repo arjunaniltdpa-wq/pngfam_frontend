@@ -47,7 +47,7 @@
     <div class="image-card">
 
       <div class="image-preview">
-        <img src="images/sample.png" alt="PNG image">
+        <img id="mainPreview" src="" alt="">
       </div>
 
       <div class="title-row">
@@ -167,8 +167,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 <!-- MAIN IMAGE LOAD -->
 <script>
-  const params = new URLSearchParams(window.location.search);
-  const slug = params.get("slug");
+  const slug = window.location.pathname.split("/image/")[1];
 
   if (!slug) {
     window.location.href = "index.html";
@@ -182,7 +181,7 @@ document.addEventListener("DOMContentLoaded", () => {
       .then(png => {
 
         /* 🔥 USE PREVIEW / WEBP IMAGE */
-        const img = document.querySelector(".image-preview img");
+        const img = document.getElementById("mainPreview");
         
         document.querySelector(".title-row h1").innerText = png.title;
 
@@ -220,7 +219,7 @@ document.addEventListener("DOMContentLoaded", () => {
           /* Canonical URL */
           const canonical = document.getElementById("canonicalLink");
           if (canonical) {
-            canonical.href = `${window.location.origin}/image.html?slug=${png.slug}`;
+            canonical.href = `${window.location.origin}/image/${png.slug}`;
           }
 
           /* Meta Description */
@@ -246,7 +245,7 @@ document.addEventListener("DOMContentLoaded", () => {
             "fileFormat": "image/png",
             "license": "https://www.pngfam.com/license",
             "acquireLicensePage": "https://www.pngfam.com/license",
-            "url": `${window.location.origin}/image.html?slug=${png.slug}`,
+            "url": `${window.location.origin}/image/${png.slug}`,
             "author": {
               "@type": "Organization",
               "name": "PNGfam"
@@ -325,8 +324,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 <!-- RELATED IMAGES (SAFE FALLBACK) -->
 <script>
-  const params2 = new URLSearchParams(window.location.search);
-  const slug2 = params2.get("slug");
+  const slug2 = window.location.pathname.split("/image/")[1];
 
   if (slug2) {
     fetch(`${API}/api/pngs`)
@@ -350,7 +348,7 @@ document.addEventListener("DOMContentLoaded", () => {
             `;
 
             card.onclick = () => {
-              window.location.href = `image.html?slug=${png.slug}`;
+              window.location.href = `/image/${png.slug}`;
             };
 
             grid.appendChild(card);

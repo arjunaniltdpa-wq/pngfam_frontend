@@ -95,9 +95,15 @@ let searchPage = 1;
 /* =========================
     SEARCH QUERY
 ========================== */
-const params = new URLSearchParams(window.location.search);
-const keyword = params.get("q");
+/* Get keyword from clean URL: /search/mango-png */
+const pathParts = window.location.pathname.split("/");
+let keyword = pathParts[2] || "";
 
+/* fallback for old query URLs */
+if (!keyword) {
+  const params = new URLSearchParams(window.location.search);
+  keyword = params.get("q");
+}
 const searchInput = document.getElementById("searchInput");
 const searchTitle = document.getElementById("searchTitle");
 const searchIcon = document.querySelector(".search-icon");
@@ -142,7 +148,7 @@ No attribution required.`;
   const canonical = document.getElementById("canonicalLink");
   if (canonical) {
     const normalizedKeyword = cleanKeyword.toLowerCase().trim();
-    canonical.href = `${window.location.origin}/search?q=${encodeURIComponent(normalizedKeyword)}`;
+    canonical.href = `${window.location.origin}/search/${normalizedKeyword.replace(/\s+/g, "-")}`;
   }
 
 } else {
@@ -155,7 +161,8 @@ No attribution required.`;
 function doSearch() {
   const q = searchInput.value.trim();
   if (!q) return;
-  window.location.href = `/search?q=${encodeURIComponent(q)}`;
+  const slug = q.toLowerCase().replace(/\s+/g, "-");
+  window.location.href = `/search/${slug}`;
 }
 
 searchInput.addEventListener("keydown", e => {

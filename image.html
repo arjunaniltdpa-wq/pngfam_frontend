@@ -167,11 +167,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
 <!-- MAIN IMAGE LOAD -->
 <script>
-  const params = new URLSearchParams(window.location.search);
-  const slug = params.get("slug");
+  /* Get slug from clean URL */
+  const slug = window.location.pathname.split("/").pop();
 
   if (!slug) {
-    window.location.href = "index.html";
+    window.location.href = "/";
   } else {
 
     fetch(`${API}/api/pngs/${slug}`)
@@ -181,21 +181,17 @@ document.addEventListener("DOMContentLoaded", () => {
       })
       .then(png => {
 
-        /* 🔥 USE PREVIEW / WEBP IMAGE */
         const img = document.getElementById("mainPreview");
-        
         document.querySelector(".title-row h1").innerText = png.title;
 
-        /* 🔥 MAIN IMAGE SHOULD USE PREVIEW WEBP */
         img.src = png.previewUrl || png.originalUrl;
         img.alt = `${png.title} transparent png`;
         img.loading = "eager";
         img.decoding = "async";
 
         const downloadBtn = document.querySelector(".download-btn");
-
         downloadBtn.href = `${API}/api/pngs/${png.slug}/download`;
-        downloadBtn.removeAttribute("download"); // important
+        downloadBtn.removeAttribute("download");
 
         downloadBtn.querySelector("span").innerText =
           `Download PNG (${png.width} × ${png.height})`;
@@ -210,109 +206,107 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         /* SEO */
-          const seoDescription = `Download ${png.title} PNG with transparent background. 
-          Free HD cutout image for graphic design, ads, posters, websites and creative projects. 
-          No attribution required.`;
+        const seoDescription = `Download ${png.title} PNG with transparent background. 
+        Free HD cutout image for graphic design, ads, posters, websites and creative projects. 
+        No attribution required.`;
 
-          /* Title */
-          document.title = `${png.title} – Free Transparent PNG Download`;
+        /* Title */
+        document.title = `${png.title} – Free Transparent PNG Download`;
 
-          /* Canonical URL */
-          const canonical = document.getElementById("canonicalLink");
-          if (canonical) {
-            canonical.href = `${window.location.origin}/image.html?slug=${png.slug}`;
+        /* Canonical URL (Clean) */
+        const canonical = document.getElementById("canonicalLink");
+        if (canonical) {
+          canonical.href = `${window.location.origin}/image/${png.slug}`;
+        }
+
+        /* Meta Description */
+        document
+          .querySelector('meta[name="description"]')
+          .setAttribute("content", seoDescription);
+
+        /* Visible SEO Text */
+        const seoText = document.getElementById("seoText");
+        if (seoText) seoText.innerText = seoDescription;
+
+        /* ================= IMAGE SCHEMA (JSON-LD) ================= */
+        const schema = {
+          "@context": "https://schema.org",
+          "@type": "ImageObject",
+          "name": png.title,
+          "description": png.description || `Download ${png.title} PNG with transparent background`,
+          "contentUrl": png.originalUrl,
+          "thumbnailUrl": png.previewUrl || png.thumbUrl,
+          "width": png.width,
+          "height": png.height,
+          "fileFormat": "image/png",
+          "license": "https://www.pngfam.com/license",
+          "acquireLicensePage": "https://www.pngfam.com/license",
+          "url": `${window.location.origin}/image/${png.slug}`,
+          "author": {
+            "@type": "Organization",
+            "name": "PNGfam"
           }
+        };
 
-          /* Meta Description */
-          document
-            .querySelector('meta[name="description"]')
-            .setAttribute("content", seoDescription);
+        /* Inject schema */
+        let scriptTag = document.querySelector("#image-schema");
+        if (!scriptTag) {
+          scriptTag = document.createElement("script");
+          scriptTag.type = "application/ld+json";
+          scriptTag.id = "image-schema";
+          document.head.appendChild(scriptTag);
+        }
+        scriptTag.textContent = JSON.stringify(schema);
 
-          /* Visible SEO Text */
-          const seoText = document.getElementById("seoText");
-          if (seoText) seoText.innerText = seoDescription;
+        /* OG IMAGE */
+        let ogImage = document.querySelector('meta[property="og:image"]');
+        if (!ogImage) {
+          ogImage = document.createElement("meta");
+          ogImage.setAttribute("property", "og:image");
+          document.head.appendChild(ogImage);
+        }
+        ogImage.setAttribute("content", png.previewUrl || png.thumbUrl);
 
-          /* ================= IMAGE SCHEMA (JSON-LD) ================= */
+        /* OG IMAGE WIDTH & HEIGHT */
+        let ogWidth = document.querySelector('meta[property="og:image:width"]');
+        if (!ogWidth) {
+          ogWidth = document.createElement("meta");
+          ogWidth.setAttribute("property", "og:image:width");
+          document.head.appendChild(ogWidth);
+        }
+        ogWidth.setAttribute("content", png.width);
 
-          const schema = {
-            "@context": "https://schema.org",
-            "@type": "ImageObject",
-            "name": png.title,
-            "description": png.description || `Download ${png.title} PNG with transparent background`,
-            "contentUrl": png.originalUrl,
-            "thumbnailUrl": png.previewUrl || png.thumbUrl,
-            "width": png.width,
-            "height": png.height,
-            "fileFormat": "image/png",
-            "license": "https://www.pngfam.com/license",
-            "acquireLicensePage": "https://www.pngfam.com/license",
-            "url": `${window.location.origin}/image.html?slug=${png.slug}`,
-            "author": {
-              "@type": "Organization",
-              "name": "PNGfam"
-            }
-          };
+        let ogHeight = document.querySelector('meta[property="og:image:height"]');
+        if (!ogHeight) {
+          ogHeight = document.createElement("meta");
+          ogHeight.setAttribute("property", "og:image:height");
+          document.head.appendChild(ogHeight);
+        }
+        ogHeight.setAttribute("content", png.height);
 
-          /* Inject schema */
-          let scriptTag = document.querySelector("#image-schema");
-          if (!scriptTag) {
-            scriptTag = document.createElement("script");
-            scriptTag.type = "application/ld+json";
-            scriptTag.id = "image-schema";
-            document.head.appendChild(scriptTag);
-          }
+        let linkImageSrc = document.querySelector('link[rel="image_src"]');
+        if (!linkImageSrc) {
+          linkImageSrc = document.createElement("link");
+          linkImageSrc.setAttribute("rel", "image_src");
+          document.head.appendChild(linkImageSrc);
+        }
+        linkImageSrc.setAttribute("href", png.previewUrl || png.thumbUrl);
 
-          scriptTag.textContent = JSON.stringify(schema);
+        /* Twitter */
+        let twitterImage = document.querySelector('meta[name="twitter:image"]');
+        if (!twitterImage) {
+          twitterImage = document.createElement("meta");
+          twitterImage.setAttribute("name", "twitter:image");
+          document.head.appendChild(twitterImage);
+        }
+        twitterImage.setAttribute("content", png.previewUrl || png.thumbUrl);
 
-          /* OG IMAGE */
-          let ogImage = document.querySelector('meta[property="og:image"]');
-          if (!ogImage) {
-            ogImage = document.createElement("meta");
-            ogImage.setAttribute("property", "og:image");
-            document.head.appendChild(ogImage);
-          }
-          ogImage.setAttribute("content", png.previewUrl || png.thumbUrl);
+        const preload = document.createElement("link");
+        preload.rel = "preload";
+        preload.as = "image";
+        preload.href = png.previewUrl || png.thumbUrl;
+        document.head.appendChild(preload);
 
-          /* OG IMAGE WIDTH & HEIGHT */
-          let ogWidth = document.querySelector('meta[property="og:image:width"]');
-          if (!ogWidth) {
-            ogWidth = document.createElement("meta");
-            ogWidth.setAttribute("property", "og:image:width");
-            document.head.appendChild(ogWidth);
-          }
-          ogWidth.setAttribute("content", png.width);
-
-          let ogHeight = document.querySelector('meta[property="og:image:height"]');
-          if (!ogHeight) {
-            ogHeight = document.createElement("meta");
-            ogHeight.setAttribute("property", "og:image:height");
-            document.head.appendChild(ogHeight);
-          }
-          ogHeight.setAttribute("content", png.height);
-
-          let linkImageSrc = document.querySelector('link[rel="image_src"]');
-          if (!linkImageSrc) {
-            linkImageSrc = document.createElement("link");
-            linkImageSrc.setAttribute("rel", "image_src");
-            document.head.appendChild(linkImageSrc);
-          }
-          linkImageSrc.setAttribute("href", png.previewUrl || png.thumbUrl);
-
-          /* Twitter */
-          let twitterImage = document.querySelector('meta[name="twitter:image"]');
-          if (!twitterImage) {
-            twitterImage = document.createElement("meta");
-            twitterImage.setAttribute("name", "twitter:image");
-            document.head.appendChild(twitterImage);
-          }
-          twitterImage.setAttribute("content", png.previewUrl || png.thumbUrl);
-
-          const preload = document.createElement("link");
-          preload.rel = "preload";
-          preload.as = "image";
-          preload.href = png.previewUrl || png.thumbUrl;
-          document.head.appendChild(preload);
-            
       })
       .catch(() => {
         document.querySelector(".image-wrapper").innerHTML =
@@ -321,7 +315,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   }
 </script>
-
 
 <!-- RELATED IMAGES (SAFE FALLBACK) -->
 <script>

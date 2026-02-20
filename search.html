@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="css/search.css" />
   <link rel="canonical" id="canonicalLink" href="" />
+
 </head>
 <body>
 
@@ -95,15 +96,9 @@ let searchPage = 1;
 /* =========================
     SEARCH QUERY
 ========================== */
-/* Get keyword from clean URL: /search/mango-png */
-const pathParts = window.location.pathname.split("/");
-let keyword = pathParts[2] || "";
+const params = new URLSearchParams(window.location.search);
+const keyword = params.get("q");
 
-/* fallback for old query URLs */
-if (!keyword) {
-  const params = new URLSearchParams(window.location.search);
-  keyword = params.get("q");
-}
 const searchInput = document.getElementById("searchInput");
 const searchTitle = document.getElementById("searchTitle");
 const searchIcon = document.querySelector(".search-icon");
@@ -148,7 +143,7 @@ No attribution required.`;
   const canonical = document.getElementById("canonicalLink");
   if (canonical) {
     const normalizedKeyword = cleanKeyword.toLowerCase().trim();
-    canonical.href = `${window.location.origin}/search/${normalizedKeyword.replace(/\s+/g, "-")}`;
+    canonical.href = `${window.location.origin}/search?q=${encodeURIComponent(normalizedKeyword)}`;
   }
 
 } else {
@@ -161,8 +156,7 @@ No attribution required.`;
 function doSearch() {
   const q = searchInput.value.trim();
   if (!q) return;
-  const slug = q.toLowerCase().replace(/\s+/g, "-");
-  window.location.href = `/search/${slug}`;
+  window.location.href = `/search?q=${encodeURIComponent(q)}`;
 }
 
 searchInput.addEventListener("keydown", e => {

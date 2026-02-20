@@ -318,8 +318,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 <!-- RELATED IMAGES (SAFE FALLBACK) -->
 <script>
-  const params2 = new URLSearchParams(window.location.search);
-  const slug2 = params2.get("slug");
+  const slug2 = window.location.pathname.split("/").pop();
 
   if (slug2) {
     fetch(`${API}/api/pngs`)
@@ -343,7 +342,7 @@ document.addEventListener("DOMContentLoaded", () => {
             `;
 
             card.onclick = () => {
-              window.location.href = `image.html?slug=${png.slug}`;
+              window.location.href = `/image/${png.slug}`;
             };
 
             grid.appendChild(card);
@@ -351,4 +350,3 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   }
 </script>
-

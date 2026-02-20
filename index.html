@@ -147,7 +147,7 @@ fetch(`${API}/api/pngs`)
 
     data.forEach(png => {
       const link = document.createElement("a");
-      link.href = `image.html?slug=${png.slug}`;
+      link.href = `/image/${png.slug}`; // 🔥 CLEAN URL FIX
       link.className = "card-link";
 
       link.innerHTML = `

@@ -7,9 +7,9 @@
   <title>PNG Image – Free Download</title>
   <meta name="description" content="Download PNG image with transparent background for free." />
 
-  <link rel="stylesheet" href="css/style.css" />
-  <link rel="stylesheet" href="css/image.css" />
-  <link rel="stylesheet" href="css/search.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/image.css" />
+  <link rel="stylesheet" href="/css/search.css" />
   <link rel="canonical" id="canonicalLink" href="" />
 
   <meta property="og:type" content="website">
@@ -26,15 +26,15 @@
     <div class="search-header-inner">
 
       <div class="logo">
-        <a href="index.html">
-          <img src="images/logo2.png" alt="PNGfam">
+        <a href="/">
+          <img src="/images/logo2.png" alt="PNGfam">
         </a>
       </div>
 
       <div class="search-box right-search">
         <input type="text" id="searchInput" placeholder="Search PNG images..." />
         <span class="search-icon">
-          <img src="images/search.png" alt="Search">
+          <img src="/images/search.png" alt="Search">
         </span>
       </div>
 
@@ -74,7 +74,7 @@
       </div>
 
       <a class="download-btn" href="#" download>
-        <img src="images/download.png" alt="Download">
+        <img src="/images/download.png" alt="Download">
         <span>Download PNG</span>
       </a>
 
@@ -178,7 +178,7 @@ if (!slug || slug === "image.html") {
 
 console.log("Slug:", slug); // debug
 if (!slug) {
-  window.location.href = "index.html";
+  window.location.href = "/";
 } else {
 
   fetch(`${API}/api/pngs/${slug}`)
@@ -329,7 +329,6 @@ if (!slug) {
 }
 </script>
 
-
 <!-- RELATED IMAGES (SAFE FALLBACK) -->
 <script>
   const slug2 = window.location.pathname.split("/").pop();
@@ -364,5 +363,3 @@ if (!slug) {
       });
   }
 </script>
-
-

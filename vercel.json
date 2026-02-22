@@ -1,8 +1,8 @@
 {
-  "cleanUrls": true,
   "rewrites": [
     { "source": "/", "destination": "/index.html" },
     { "source": "/search", "destination": "/search.html" },
+
     { "source": "/image/:slug", "destination": "/image.html" },
 
     { "source": "/privacy-policy", "destination": "/privacy-policy.html" },

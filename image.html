@@ -166,173 +166,173 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 
 <!-- MAIN IMAGE LOAD -->
-  <script>
-  // Get slug from clean URL: /image/slug
-  let slug = window.location.pathname.split("/").pop();
+<script>
+// Extract slug from clean URL: /image/:slug
+let slug = window.location.pathname.split("/").pop();
 
-  // fallback support for old URLs
-  if (!slug) {
-    const params = new URLSearchParams(window.location.search);
-    slug = params.get("slug");
-  }
+// Fallback for old URLs: image.html?slug=xxx
+if (!slug || slug === "image.html") {
+  const params = new URLSearchParams(window.location.search);
+  slug = params.get("slug");
+}
 
-  if (!slug) {
-    window.location.href = "index.html";
-  } else {
+console.log("Slug:", slug); // debug
+if (!slug) {
+  window.location.href = "index.html";
+} else {
 
-    fetch(`${API}/api/pngs/${slug}`)
-      .then(res => {
-        if (!res.ok) throw new Error("Not found");
-        return res.json();
-      })
-      .then(png => {
+  fetch(`${API}/api/pngs/${slug}`)
+    .then(res => {
+      if (!res.ok) throw new Error("Not found");
+      return res.json();
+    })
+    .then(png => {
 
-        /* 🔥 USE PREVIEW / WEBP IMAGE */
-        const img = document.getElementById("mainPreview");
-        
-        document.querySelector(".title-row h1").innerText = png.title;
+      /* 🔥 USE PREVIEW / WEBP IMAGE */
+      const img = document.getElementById("mainPreview");
+      
+      document.querySelector(".title-row h1").innerText = png.title;
 
-        /* 🔥 MAIN IMAGE SHOULD USE PREVIEW WEBP */
-        img.src = png.previewUrl || png.originalUrl;
-        img.alt = `${png.title} transparent png`;
-        img.loading = "eager";
-        img.decoding = "async";
+      /* 🔥 MAIN IMAGE SHOULD USE PREVIEW WEBP */
+      img.src = png.previewUrl || png.originalUrl;
+      img.alt = `${png.title} transparent png`;
+      img.loading = "eager";
+      img.decoding = "async";
 
-        const downloadBtn = document.querySelector(".download-btn");
+      const downloadBtn = document.querySelector(".download-btn");
 
-        downloadBtn.href = `${API}/api/pngs/${png.slug}/download`;
-        downloadBtn.removeAttribute("download"); // important
+      downloadBtn.href = `${API}/api/pngs/${png.slug}/download`;
+      downloadBtn.removeAttribute("download"); // important
 
-        downloadBtn.querySelector("span").innerText =
-          `Download PNG (${png.width} × ${png.height})`;
+      downloadBtn.querySelector("span").innerText =
+        `Download PNG (${png.width} × ${png.height})`;
 
-        /* Tags */
-        const tagsBox = document.querySelector(".tags");
-        tagsBox.innerHTML = "";
-        (png.tags || []).forEach(tag => {
-          const span = document.createElement("span");
-          span.innerText = tag;
-          tagsBox.appendChild(span);
-        });
-
-        /* SEO */
-          const seoDescription = `Download ${png.title} PNG with transparent background. 
-          Free HD cutout image for graphic design, ads, posters, websites and creative projects. 
-          No attribution required.`;
-
-          /* Title */
-          document.title = `${png.title} – Free Transparent PNG Download`;
-
-          /* Canonical URL */
-          const canonical = document.getElementById("canonicalLink");
-          if (canonical) {
-            canonical.href = `${window.location.origin}/image/${png.slug}`;
-          }
-
-          /* Meta Description */
-          document
-            .querySelector('meta[name="description"]')
-            .setAttribute("content", seoDescription);
-
-          /* Visible SEO Text */
-          const seoText = document.getElementById("seoText");
-          if (seoText) seoText.innerText = seoDescription;
-
-          /* ================= IMAGE SCHEMA (JSON-LD) ================= */
-
-          const schema = {
-            "@context": "https://schema.org",
-            "@type": "ImageObject",
-            "name": png.title,
-            "description": png.description || `Download ${png.title} PNG with transparent background`,
-            "contentUrl": png.originalUrl,
-            "thumbnailUrl": png.previewUrl || png.thumbUrl,
-            "width": png.width,
-            "height": png.height,
-            "fileFormat": "image/png",
-            "license": "https://www.pngfam.com/license",
-            "acquireLicensePage": "https://www.pngfam.com/license",
-            "url": `${window.location.origin}/image/${png.slug}`,
-            "author": {
-              "@type": "Organization",
-              "name": "PNGfam"
-            }
-          };
-
-          /* Inject schema */
-          let scriptTag = document.querySelector("#image-schema");
-          if (!scriptTag) {
-            scriptTag = document.createElement("script");
-            scriptTag.type = "application/ld+json";
-            scriptTag.id = "image-schema";
-            document.head.appendChild(scriptTag);
-          }
-
-          scriptTag.textContent = JSON.stringify(schema);
-
-          /* OG IMAGE */
-          let ogImage = document.querySelector('meta[property="og:image"]');
-          if (!ogImage) {
-            ogImage = document.createElement("meta");
-            ogImage.setAttribute("property", "og:image");
-            document.head.appendChild(ogImage);
-          }
-          ogImage.setAttribute("content", png.previewUrl || png.thumbUrl);
-
-          /* OG IMAGE WIDTH & HEIGHT */
-          let ogWidth = document.querySelector('meta[property="og:image:width"]');
-          if (!ogWidth) {
-            ogWidth = document.createElement("meta");
-            ogWidth.setAttribute("property", "og:image:width");
-            document.head.appendChild(ogWidth);
-          }
-          ogWidth.setAttribute("content", png.width);
-
-          let ogHeight = document.querySelector('meta[property="og:image:height"]');
-          if (!ogHeight) {
-            ogHeight = document.createElement("meta");
-            ogHeight.setAttribute("property", "og:image:height");
-            document.head.appendChild(ogHeight);
-          }
-          ogHeight.setAttribute("content", png.height);
-
-          let linkImageSrc = document.querySelector('link[rel="image_src"]');
-          if (!linkImageSrc) {
-            linkImageSrc = document.createElement("link");
-            linkImageSrc.setAttribute("rel", "image_src");
-            document.head.appendChild(linkImageSrc);
-          }
-          linkImageSrc.setAttribute("href", png.previewUrl || png.thumbUrl);
-
-          /* Twitter */
-          let twitterImage = document.querySelector('meta[name="twitter:image"]');
-          if (!twitterImage) {
-            twitterImage = document.createElement("meta");
-            twitterImage.setAttribute("name", "twitter:image");
-            document.head.appendChild(twitterImage);
-          }
-          twitterImage.setAttribute("content", png.previewUrl || png.thumbUrl);
-
-          const preload = document.createElement("link");
-          preload.rel = "preload";
-          preload.as = "image";
-          preload.href = png.previewUrl || png.thumbUrl;
-          document.head.appendChild(preload);
-            
-      })
-      .catch(() => {
-        document.querySelector(".image-wrapper").innerHTML =
-          "<p>Failed to load image</p>";
+      /* Tags */
+      const tagsBox = document.querySelector(".tags");
+      tagsBox.innerHTML = "";
+      (png.tags || []).forEach(tag => {
+        const span = document.createElement("span");
+        span.innerText = tag;
+        tagsBox.appendChild(span);
       });
 
-  }
+      /* SEO */
+        const seoDescription = `Download ${png.title} PNG with transparent background. 
+        Free HD cutout image for graphic design, ads, posters, websites and creative projects. 
+        No attribution required.`;
+
+        /* Title */
+        document.title = `${png.title} – Free Transparent PNG Download`;
+
+        /* Canonical URL */
+        const canonical = document.getElementById("canonicalLink");
+        if (canonical) {
+          canonical.href = `${window.location.origin}/image/${png.slug}`;
+        }
+
+        /* Meta Description */
+        document
+          .querySelector('meta[name="description"]')
+          .setAttribute("content", seoDescription);
+
+        /* Visible SEO Text */
+        const seoText = document.getElementById("seoText");
+        if (seoText) seoText.innerText = seoDescription;
+
+        /* ================= IMAGE SCHEMA (JSON-LD) ================= */
+
+        const schema = {
+          "@context": "https://schema.org",
+          "@type": "ImageObject",
+          "name": png.title,
+          "description": png.description || `Download ${png.title} PNG with transparent background`,
+          "contentUrl": png.originalUrl,
+          "thumbnailUrl": png.previewUrl || png.thumbUrl,
+          "width": png.width,
+          "height": png.height,
+          "fileFormat": "image/png",
+          "license": "https://www.pngfam.com/license",
+          "acquireLicensePage": "https://www.pngfam.com/license",
+          "url": `${window.location.origin}/image/${png.slug}`,
+          "author": {
+            "@type": "Organization",
+            "name": "PNGfam"
+          }
+        };
+
+        /* Inject schema */
+        let scriptTag = document.querySelector("#image-schema");
+        if (!scriptTag) {
+          scriptTag = document.createElement("script");
+          scriptTag.type = "application/ld+json";
+          scriptTag.id = "image-schema";
+          document.head.appendChild(scriptTag);
+        }
+
+        scriptTag.textContent = JSON.stringify(schema);
+
+        /* OG IMAGE */
+        let ogImage = document.querySelector('meta[property="og:image"]');
+        if (!ogImage) {
+          ogImage = document.createElement("meta");
+          ogImage.setAttribute("property", "og:image");
+          document.head.appendChild(ogImage);
+        }
+        ogImage.setAttribute("content", png.previewUrl || png.thumbUrl);
+
+        /* OG IMAGE WIDTH & HEIGHT */
+        let ogWidth = document.querySelector('meta[property="og:image:width"]');
+        if (!ogWidth) {
+          ogWidth = document.createElement("meta");
+          ogWidth.setAttribute("property", "og:image:width");
+          document.head.appendChild(ogWidth);
+        }
+        ogWidth.setAttribute("content", png.width);
+
+        let ogHeight = document.querySelector('meta[property="og:image:height"]');
+        if (!ogHeight) {
+          ogHeight = document.createElement("meta");
+          ogHeight.setAttribute("property", "og:image:height");
+          document.head.appendChild(ogHeight);
+        }
+        ogHeight.setAttribute("content", png.height);
+
+        let linkImageSrc = document.querySelector('link[rel="image_src"]');
+        if (!linkImageSrc) {
+          linkImageSrc = document.createElement("link");
+          linkImageSrc.setAttribute("rel", "image_src");
+          document.head.appendChild(linkImageSrc);
+        }
+        linkImageSrc.setAttribute("href", png.previewUrl || png.thumbUrl);
+
+        /* Twitter */
+        let twitterImage = document.querySelector('meta[name="twitter:image"]');
+        if (!twitterImage) {
+          twitterImage = document.createElement("meta");
+          twitterImage.setAttribute("name", "twitter:image");
+          document.head.appendChild(twitterImage);
+        }
+        twitterImage.setAttribute("content", png.previewUrl || png.thumbUrl);
+
+        const preload = document.createElement("link");
+        preload.rel = "preload";
+        preload.as = "image";
+        preload.href = png.previewUrl || png.thumbUrl;
+        document.head.appendChild(preload);
+          
+    })
+    .catch(() => {
+      document.querySelector(".image-wrapper").innerHTML =
+        "<p>Failed to load image</p>";
+    });
+
+}
 </script>
 
 
 <!-- RELATED IMAGES (SAFE FALLBACK) -->
 <script>
-  const params2 = new URLSearchParams(window.location.search);
-  const slug2 = params2.get("slug");
+  const slug2 = window.location.pathname.split("/").pop();
 
   if (slug2) {
     fetch(`${API}/api/pngs`)
@@ -363,8 +363,6 @@ document.addEventListener("DOMContentLoaded", () => {
           });
       });
   }
-  
 </script>
-
 
 

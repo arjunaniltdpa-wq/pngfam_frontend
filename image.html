@@ -271,49 +271,6 @@ if (!slug) {
 
         scriptTag.textContent = JSON.stringify(schema);
 
-        /* OG IMAGE */
-        let ogImage = document.querySelector('meta[property="og:image"]');
-        if (!ogImage) {
-          ogImage = document.createElement("meta");
-          ogImage.setAttribute("property", "og:image");
-          document.head.appendChild(ogImage);
-        }
-        ogImage.setAttribute("content", png.previewUrl || png.thumbUrl);
-
-        /* OG IMAGE WIDTH & HEIGHT */
-        let ogWidth = document.querySelector('meta[property="og:image:width"]');
-        if (!ogWidth) {
-          ogWidth = document.createElement("meta");
-          ogWidth.setAttribute("property", "og:image:width");
-          document.head.appendChild(ogWidth);
-        }
-        ogWidth.setAttribute("content", png.width);
-
-        let ogHeight = document.querySelector('meta[property="og:image:height"]');
-        if (!ogHeight) {
-          ogHeight = document.createElement("meta");
-          ogHeight.setAttribute("property", "og:image:height");
-          document.head.appendChild(ogHeight);
-        }
-        ogHeight.setAttribute("content", png.height);
-
-        let linkImageSrc = document.querySelector('link[rel="image_src"]');
-        if (!linkImageSrc) {
-          linkImageSrc = document.createElement("link");
-          linkImageSrc.setAttribute("rel", "image_src");
-          document.head.appendChild(linkImageSrc);
-        }
-        linkImageSrc.setAttribute("href", png.previewUrl || png.thumbUrl);
-
-        /* Twitter */
-        let twitterImage = document.querySelector('meta[name="twitter:image"]');
-        if (!twitterImage) {
-          twitterImage = document.createElement("meta");
-          twitterImage.setAttribute("name", "twitter:image");
-          document.head.appendChild(twitterImage);
-        }
-        twitterImage.setAttribute("content", png.previewUrl || png.thumbUrl);
-
         const preload = document.createElement("link");
         preload.rel = "preload";
         preload.as = "image";
@@ -355,7 +312,7 @@ if (!slug) {
             `;
 
             card.onclick = () => {
-              window.location.href = `/image/${png.slug}`;
+              window.location.href = `/m/image/${png.slug}`;
             };
 
             grid.appendChild(card);

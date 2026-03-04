@@ -16,7 +16,12 @@
   <meta property="og:title" content="Free Transparent PNG Image Download">
   <meta property="og:description" content="Download high-quality PNG with transparent background.">
   <meta name="twitter:card" content="summary_large_image">
-
+  <meta property="og:image" content="">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="1200">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta property="og:url" content="">
+  <meta name="twitter:image" content="">
 </head>
 
 <body>
@@ -41,21 +46,44 @@
     </div>
   </header>
 
+  <nav class="breadcrumbs">
+    <a href="/">Home</a> ›
+    <a href="/category/png">PNG Images</a> ›
+    <span id="breadcrumbTitle">Image</span>
+  </nav>
+
   <!-- IMAGE PAGE -->
   <section class="image-wrapper">
+      <div class="image-card">
 
-    <div class="image-card">
+        <picture>
+          <source id="webpSource" type="image/webp">
+          <img
+            id="mainPreview"
+            src=""
+            alt=""
+            width="1200"
+            height="1200"
+            loading="lazy"
+            decoding="async"
+          >
+        </picture>
 
-      <div class="image-preview">
-        <img id="mainPreview" src="" alt="">
-      </div>
+        <noscript>
+          <img
+            src="/images/placeholder.png"
+            alt="PNG transparent background free download"
+            width="1200"
+            height="1200"
+          >
+        </noscript>
 
-      <div class="title-row">
-        <h1>Loading...</h1>
-        <button class="info-btn" id="infoBtn">ℹ️</button>
-      </div>
-
-      <div class="tags"></div>
+        <div class="title-row">
+          <h1>Loading...</h1>
+          <button class="info-btn" id="infoBtn">ℹ️</button>
+        </div>
+        <h2 class="subtitle">High Quality Transparent PNG Image</h2>
+        <div class="tags"></div>
 
       <!-- SEO DESCRIPTION BLOCK -->
       <div class="image-seo-text">
@@ -96,6 +124,16 @@
     </div>
   </section>
 
+  <section class="popular-section">
+    <h2>Popular Transparent PNG</h2>
+    <div class="popular-links">
+      <a href="/search?q=logo png">Logo PNG</a>
+      <a href="/search?q=icon png">Icon PNG</a>
+      <a href="/search?q=animal png">Animal PNG</a>
+      <a href="/search?q=background png">Background PNG</a>
+    </div>
+  </section>
+
   <!-- INFO MODAL -->
   <div class="info-modal" id="infoModal">
     <div class="info-content">
@@ -119,7 +157,7 @@
     </div>
   </footer>
 
-</body>
+
 <script>
 
 const API = "https://pngfam-backend.onrender.com";
@@ -194,9 +232,7 @@ if (!slug) {
       document.querySelector(".title-row h1").innerText = png.title;
 
       /* 🔥 MAIN IMAGE SHOULD USE PREVIEW WEBP */
-      img.src = png.previewUrl || png.originalUrl;
-      img.alt = `${png.title} transparent png`;
-      img.loading = "eager";
+      img.alt = `${png.title} PNG transparent background free download`;
       img.decoding = "async";
 
       const downloadBtn = document.querySelector(".download-btn");
@@ -216,20 +252,38 @@ if (!slug) {
         tagsBox.appendChild(span);
       });
 
+      document.getElementById("webpSource").srcset = png.previewUrl;
+      img.src = png.previewUrl || png.originalUrl;
+
       /* SEO */
-        const seoDescription = `Download ${png.title} PNG with transparent background. 
-        Free HD cutout image for graphic design, ads, posters, websites and creative projects. 
-        No attribution required.`;
-
+        const seoDescription = `Download ${png.title} PNG with transparent background in HD resolution. Free for personal and commercial use. High-quality transparent PNG perfect for design, websites, presentations and marketing projects.`;
+        
+        document.querySelector('meta[property="og:title"]').setAttribute(
+          "content",
+          `${png.title} PNG Transparent Background`
+        );
+        document.querySelector('meta[property="og:url"]').setAttribute(
+          "content",
+          `${window.location.origin}/image/${png.slug}`
+        );
+        document.querySelector('meta[name="twitter:image"]').setAttribute(
+          "content",
+          png.previewUrl
+        );        
         /* Title */
-        document.title = `${png.title} – Free Transparent PNG Download`;
-
+        document.title = `${png.title} PNG Transparent Background Free Download HD`;
         /* Canonical URL */
         const canonical = document.getElementById("canonicalLink");
         if (canonical) {
           canonical.href = `${window.location.origin}/image/${png.slug}`;
         }
 
+        document.querySelector('meta[property="og:image"]').setAttribute(
+          "content",
+          png.previewUrl
+        );
+        document.getElementById("breadcrumbTitle").innerText = png.title;
+        
         /* Meta Description */
         document
           .querySelector('meta[name="description"]')
@@ -244,22 +298,29 @@ if (!slug) {
         const schema = {
           "@context": "https://schema.org",
           "@type": "ImageObject",
+          "representativeOfPage": true,
           "name": png.title,
           "description": png.description || `Download ${png.title} PNG with transparent background`,
-          "contentUrl": png.originalUrl,
+          "contentUrl": png.previewUrl || png.originalUrl,
           "thumbnailUrl": png.previewUrl || png.thumbUrl,
           "width": png.width,
           "height": png.height,
-          "fileFormat": "image/png",
+          "encodingFormat": "image/png",
           "license": "https://www.pngfam.com/license",
           "acquireLicensePage": "https://www.pngfam.com/license",
           "url": `${window.location.origin}/image/${png.slug}`,
           "author": {
-            "@type": "Organization",
-            "name": "PNGfam"
-          }
+          "@type": "Organization",
+          "name": "PNGfam"
+          },
+          "creator": {
+          "@type": "Organization",
+          "name": "PNGfam"
+          },
+          "creditText": "PNGfam",
+          "copyrightNotice": "PNGfam"
         };
-
+                
         /* Inject schema */
         let scriptTag = document.querySelector("#image-schema");
         if (!scriptTag) {
@@ -271,12 +332,13 @@ if (!slug) {
 
         scriptTag.textContent = JSON.stringify(schema);
 
-        const preload = document.createElement("link");
-        preload.rel = "preload";
-        preload.as = "image";
-        preload.href = png.previewUrl || png.thumbUrl;
-        document.head.appendChild(preload);
-          
+        if (!document.querySelector('link[rel="preload"][as="image"]')) {
+          const preload = document.createElement("link");
+          preload.rel = "preload";
+          preload.as = "image";
+          preload.href = png.previewUrl || png.thumbUrl;
+          document.head.appendChild(preload);
+        }
     })
     .catch(() => {
       document.querySelector(".image-wrapper").innerHTML =
@@ -306,13 +368,13 @@ if (!slug) {
 
             card.innerHTML = `
               <div class="card-image">
-                <img src="${png.thumbUrl}" alt="${png.title}">
+                <img loading="lazy" src="${png.thumbUrl}" alt="${png.title} transparent PNG free download">
               </div>
               <p class="card-title">${png.title}</p>
             `;
 
             card.onclick = () => {
-              window.location.href = `/m/image/${png.slug}`;
+              window.location.href = `/image/${png.slug}`;
             };
 
             grid.appendChild(card);
@@ -320,3 +382,6 @@ if (!slug) {
       });
   }
 </script>
+
+</body>
+</html>

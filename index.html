@@ -70,18 +70,22 @@
     </div>
   </header>
 
+  <section class="section-title premium"></section>
   <!-- TITLE -->
   <section class="section-title">
     <h1>Free Transparent PNG Images Download for Designers</h1>
     <p>
     Download thousands of free PNG images with transparent backgrounds.
-    Perfect for graphic design, websites, ads, and creative projects.
+     Perfect for graphic design, websites, ads, and creative projects.
     Browse high-quality HD PNG images including logos, icons, animals, and more.
     </p>
   </section>
 
-  <!-- IMAGE GRID -->
+  <div class="section-divider"></div>
+
   <main class="container">
+    <h2 class="section-heading">Latest PNG Images</h2>
+
     <div class="masonry" id="pngGrid"></div>
   </main>
 
@@ -90,8 +94,6 @@
       Load More PNGs
     </button>
   </div>
-
-  <h2>Latest PNG Images</h2>
   
   <footer class="site-footer">
     <div class="footer-inner">
@@ -107,79 +109,111 @@
   </footer>
 
 </body>
-
-<script>
-  const API = "https://pngfam-backend.onrender.com";
-
-  const searchInput = document.getElementById("homeSearchInput");
-  const searchIcon = document.querySelector(".search-icon");
-
-  function handleSearch() {
-    if (!searchInput) return;
-
-    const query = searchInput.value.trim();
-    if (query !== "") {
-      const encodedQuery = encodeURIComponent(query);
-      window.location.href = `/search?q=${encodedQuery}`;
-    }
-  }
-
-  // Enter key
-  if (searchInput) {
-    searchInput.addEventListener("keypress", function (e) {
-      if (e.key === "Enter") {
-        handleSearch();
-      }
-    });
-  }
-
-  // Click icon
-  if (searchIcon) {
-    searchIcon.addEventListener("click", handleSearch);
-  }
-</script>
-
 <script>
 const API = "https://pngfam-backend.onrender.com";
 
-let page = 2;
+const searchInput = document.getElementById("homeSearchInput");
+const searchIcon = document.querySelector(".search-icon");
+const grid = document.getElementById("pngGrid");
+
 let loading = false;
+
+// 🔍 SEARCH
+function handleSearch() {
+  if (!searchInput) return;
+
+  const query = searchInput.value.trim();
+  if (query !== "") {
+    const encodedQuery = encodeURIComponent(query);
+    window.location.href = `/search?q=${encodedQuery}`;
+  }
+}
+
+if (searchInput) {
+  searchInput.addEventListener("keypress", function (e) {
+    if (e.key === "Enter") handleSearch();
+  });
+}
+
+if (searchIcon) {
+  searchIcon.addEventListener("click", handleSearch);
+}
+
+
+// 🔥 INITIAL LOAD
+async function loadImages() {
+  try {
+    if (!grid) return;
+
+    grid.innerHTML = "<p style='text-align:center'>Loading PNG images...</p>";
+
+    const res = await fetch(`${API}/api/pngs?limit=30`);
+    const data = await res.json();
+
+    grid.innerHTML = "";
+
+    data.forEach(png => {
+      const card = `
+        <a href="/image/${png.slug}" class="card-link">
+          <div class="card png-bg">
+            <div class="card-image">
+              <img src="${png.thumbUrl}" alt="${png.title}" loading="lazy">
+            </div>
+            <div class="card-title">${png.title}</div>
+          </div>
+        </a>
+      `;
+      grid.insertAdjacentHTML("beforeend", card);
+    });
+
+  } catch (err) {
+    console.error(err);
+    if (grid) {
+      grid.innerHTML = "<p>Failed to load images</p>";
+    }
+  }
+}
+
+
+// 🔥 LOAD MORE (SCROLL)
+let loadedSlugs = new Set();
 
 async function loadMoreImages() {
   if (loading) return;
   loading = true;
 
-  const res = await fetch(`${API}/api/pngs?limit=30`);
-  const data = await res.json();
+  try {
+    const res = await fetch(`${API}/api/pngs?limit=200`);
+    const data = await res.json();
 
-  const grid = document.querySelector(".masonry");
+    data.forEach(png => {
 
-  data.forEach(png => {
-    const thumb = png.thumbUrl;
+      // ❌ skip duplicates
+      if (loadedSlugs.has(png.slug)) return;
 
-    const card = `
-      <a href="/image/${png.slug}" class="card-link">
-        <div class="card png-bg">
-          <div class="card-image">
-            <img src="${thumb}" alt="${png.title}" loading="lazy">
+      loadedSlugs.add(png.slug);
+
+      const card = `
+        <a href="/image/${png.slug}" class="card-link">
+          <div class="card png-bg">
+            <div class="card-image">
+              <img src="${png.thumbUrl}" alt="${png.title}" loading="lazy">
+            </div>
+            <div class="card-title">${png.title}</div>
           </div>
-          <div class="card-title">${png.title}</div>
-        </div>
-      </a>
-    `;
+        </a>
+      `;
+      grid.insertAdjacentHTML("beforeend", card);
+    });
 
-    grid.insertAdjacentHTML("beforeend", card);
-  });
+  } catch (err) {
+    console.error(err);
+  }
 
   loading = false;
 }
-
-// scroll trigger
-window.addEventListener("scroll", () => {
-  if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 300) {
-    loadMoreImages();
-  }
-});
+// 🚀 RUN
+loadImages();
 </script>
 
 </html>

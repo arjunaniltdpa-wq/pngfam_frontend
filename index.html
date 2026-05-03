@@ -57,13 +57,13 @@
 
         <!-- ✅ CATEGORIES NOW INSIDE HEADER -->
         <div class="categories">
-          <a href="/search?q=logo png">Logo</a>
-          <a href="/search?q=icon png">Icons</a>
-          <a href="/search?q=animal png">Animals</a>
-          <a href="/search?q=flower png">Flowers</a>
-          <a href="/search?q=food png">Food</a>
-          <a href="/search?q=cartoon png">Cartoon</a>
-          <a href="/search?q=text png">Text</a>
+        <a href="/search?q=logo png">Logo</a>
+        <a href="/search?q=icon png">Icons</a>
+        <a href="/search?q=animal png">Animals</a>
+        <a href="/search?q=flower png">Flowers</a>
+        <a href="/search?q=food png">Food</a>
+        <a href="/search?q=cartoon png">Cartoon</a>
+        <a href="/search?q=text png">Text</a>
         </div>
 
       </div>
@@ -86,8 +86,6 @@
   </main>
 
   <h2>Latest PNG Images</h2>
-
-  <div id="loader">Loading more...</div>
   
   <footer class="site-footer">
     <div class="footer-inner">
@@ -133,23 +131,6 @@
   if (searchIcon) {
     searchIcon.addEventListener("click", handleSearch);
   }
-</script>
-
-<script>
-
-function loadMoreImages() {
-  loading = true;
-  document.getElementById('loader').style.display = 'block';
-
-  // simulate API
-  setTimeout(() => {
-    page++;
-    // fetch(`/api/images?page=${page}&sort=popular`)
-    // append cards to .grid
-    loading = false;
-    document.getElementById('loader').style.display = 'none';
-  }, 1000);
-}
 </script>
 
 </html>

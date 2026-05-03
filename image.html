@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="/css/search.css" />
   <link rel="canonical" id="canonicalLink" href="">
   <link rel="preload" as="image" href="/images/placeholder.png">
-  
+
   <meta property="og:image:alt" content="Transparent PNG image high quality">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Free Transparent PNG Image Download">
@@ -136,6 +136,10 @@
       </div>
     </div>
   </section>
+
+  <div class="more-wrapper">
+    <button id="moreBtn" class="more-btn">More PNGs</button>
+  </div>
 
   <section class="popular-section">
     <h2>Popular Transparent PNG</h2>
@@ -358,6 +362,10 @@ fetch(`${API}/api/pngs/related/${slug2}`)
       grid.appendChild(card);
     });
   });
+
+document.getElementById("moreBtn").onclick = () => {
+  window.location.href = "/category/png";
+};
 
 </script>
 

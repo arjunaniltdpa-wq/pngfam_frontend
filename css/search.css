@@ -198,6 +198,14 @@
     font-size: 20px;
   }
 }
+
+@media (max-width: 768px) {
+  #resultsGrid,
+  #relatedGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 .no-results {
   grid-column: 1 / -1;
   text-align: center;
@@ -315,4 +323,38 @@
   font-size: 13px;
   color: #7a8699;
   letter-spacing: 0.2px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 10px;
+  transition: 0.2s;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card-title {
+  font-size: 14px;
+  text-align: center;
+  margin-top: 8px;
+}
+
+.checker-bg {
+  background: repeating-conic-gradient(#eee 0% 25%, #fff 0% 50%) 50% / 20px 20px;
+}
+
+.results-wrapper {
+  box-shadow: 0 10px 40px rgba(0,0,0,0.06);
+}
+
+#searchTitle {
+  letter-spacing: -0.5px;
+}
+
+.image-card-box {
+  backdrop-filter: blur(4px);
 }

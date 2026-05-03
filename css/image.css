@@ -281,3 +281,42 @@
   color: #7a8699;
   letter-spacing: 0.2px;
 }
+
+.more-wrapper {
+  text-align: center;
+  margin: 30px 0;
+}
+
+.more-btn {
+  background: #f2f2f2;
+  border: none;
+  padding: 14px 30px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.more-btn:hover {
+  background: #e5e5e5;
+}
+
+.card-image {
+  background: repeating-conic-gradient(#eee 0% 25%, #fff 0% 50%) 50% / 20px 20px;
+  border-radius: 12px;
+  padding: 10px;
+}
+
+.card img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.card {
+  transition: 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+}

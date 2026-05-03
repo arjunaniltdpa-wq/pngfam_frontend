@@ -16,7 +16,7 @@
     <div class="search-header-inner">
 
       <div class="logo">
-        <a href="index.html">
+        <a href="/">
           <img src="images/logo2.png" alt="PNGfam">
         </a>
       </div>
@@ -127,7 +127,7 @@ if (keyword) {
 Free HD ${cleanKeyword} cutout PNGs for graphic design, ads, posters, websites, and creative projects. 
 No attribution required.`;
 
-  document.title = `${cleanKeyword} PNG Images – Free Download`;
+  document.title = `${cleanKeyword} PNG Transparent Background Images Free Download HD`;
 
   document
     .querySelector('meta[name="description"]')
@@ -145,6 +145,7 @@ No attribution required.`;
     const normalizedKeyword = cleanKeyword.toLowerCase().trim();
     canonical.href = `${window.location.origin}/search?q=${encodeURIComponent(normalizedKeyword)}`;
   }
+  
 
 } else {
   searchTitle.textContent = "All PNG Images";
@@ -163,7 +164,9 @@ searchInput.addEventListener("keydown", e => {
   if (e.key === "Enter") doSearch();
 });
 
-searchIcon.addEventListener("click", doSearch);
+if (searchIcon) {
+  searchIcon.addEventListener("click", doSearch);
+}
 
 /* =========================
     CARD
@@ -176,7 +179,7 @@ function renderCard(png, target) {
   card.className = "card image-card-box";
   card.innerHTML = `
     <div class="card-image checker-bg">
-      <img src="${png.thumbUrl}" alt="${title}" loading="lazy">
+      <img src="${png.thumbUrl}" alt="${title} PNG transparent background free download">
     </div>
     <h3 class="card-title">${title}</h3>
   `;
@@ -187,19 +190,27 @@ function renderCard(png, target) {
     SEARCH RESULTS (50)
 ========================== */
 function loadSearchResults() {
-  let url = `${API_BASE}/api/pngs?limit=${SEARCH_LIMIT}&page=${searchPage}`;
-  if (cleanKeyword) {
-    url += `&search=${encodeURIComponent(cleanKeyword)}`;
+  let url;
+
+  if (!cleanKeyword) {
+    url = `${API_BASE}/api/pngs?limit=50`;
+  } else {
+    url = `${API_BASE}/api/pngs/search?q=${encodeURIComponent(cleanKeyword)}&limit=50`;
   }
+
+  // ✅ move here
+  grid.innerHTML = `<p style="text-align:center;">Loading PNG images...</p>`;
 
   fetch(url)
     .then(res => res.json())
     .then(data => {
 
-      if (!data.length && searchPage === 1) {
+      grid.innerHTML = ""; // clear loading
+
+      if (!data.length) {
         grid.innerHTML = `
           <p class="no-results">
-            No PNG images found for "<strong>${cleanKeyword}</strong>"
+            No PNG images found for "<strong>${cleanKeyword}</strong>". Showing similar images below.
           </p>
         `;
         loadExploreMore();
@@ -207,16 +218,9 @@ function loadSearchResults() {
       }
 
       data.forEach(png => renderCard(png, grid));
-
-      pagination.style.display =
-        data.length === SEARCH_LIMIT ? "block" : "none";
+      pagination.style.display = "none";
     });
 }
-
-document.getElementById("nextSearchBtn").addEventListener("click", () => {
-  searchPage++;
-  loadSearchResults();
-});
 
 /* =========================
     EXPLORE MORE (20)
@@ -225,7 +229,7 @@ function loadExploreMore() {
   relatedWrapper.style.display = "block";
   relatedGrid.innerHTML = "";
 
-  fetch(`${API_BASE}/api/pngs?limit=${EXPLORE_LIMIT}`)
+  fetch(`${API_BASE}/api/pngs?limit=20`)
     .then(res => res.json())
     .then(data => {
       data.forEach(png => renderCard(png, relatedGrid));

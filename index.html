@@ -57,13 +57,13 @@
 
         <!-- ✅ CATEGORIES NOW INSIDE HEADER -->
         <div class="categories">
-          <a href="/category/logo-png">Logo</a>
-          <a href="/category/icon-png">Icons</a>
-          <a href="/category/animal-png">Animals</a>
-          <a href="/category/flower-png">Flowers</a>
-          <a href="/category/food-png">Food</a>
-          <a href="/category/cartoon-png">Cartoon</a>
-          <a href="/category/text-png">Text</a>
+          <a href="/search?q=logo png">Logo</a>
+          <a href="/search?q=icon png">Icons</a>
+          <a href="/search?q=animal png">Animals</a>
+          <a href="/search?q=flower png">Flowers</a>
+          <a href="/search?q=food png">Food</a>
+          <a href="/search?q=cartoon png">Cartoon</a>
+          <a href="/search?q=text png">Text</a>
         </div>
 
       </div>
@@ -86,7 +86,7 @@
   </main>
 
   <h2>Latest PNG Images</h2>
-  
+
   <div id="loader">Loading more...</div>
   
   <footer class="site-footer">
@@ -106,14 +106,13 @@
 
 <script>
   const API = "https://pngfam-backend.onrender.com";
-</script>
 
-<script>
-
-  const searchInput = document.getElementById('homeSearchInput');
-  const searchIcon = document.querySelector('.search-icon');
+  const searchInput = document.getElementById("homeSearchInput");
+  const searchIcon = document.querySelector(".search-icon");
 
   function handleSearch() {
+    if (!searchInput) return;
+
     const query = searchInput.value.trim();
     if (query !== "") {
       const encodedQuery = encodeURIComponent(query);
@@ -122,25 +121,21 @@
   }
 
   // Enter key
-  searchInput.addEventListener('keypress', function (e) {
-    if (e.key === 'Enter') {
-      handleSearch();
-    }
-  });
+  if (searchInput) {
+    searchInput.addEventListener("keypress", function (e) {
+      if (e.key === "Enter") {
+        handleSearch();
+      }
+    });
+  }
 
   // Click icon
-  searchIcon.addEventListener('click', handleSearch);
+  if (searchIcon) {
+    searchIcon.addEventListener("click", handleSearch);
+  }
 </script>
 
 <script>
-let page = 1;
-let loading = false;
-
-window.addEventListener('scroll', () => {
-  if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 300 && !loading) {
-    loadMoreImages();
-  }
-});
 
 function loadMoreImages() {
   loading = true;

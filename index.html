@@ -57,13 +57,13 @@
 
         <!-- ✅ CATEGORIES NOW INSIDE HEADER -->
         <div class="categories">
-          <button data-cat="Logo PNG">Logo</button>
-          <button data-cat="Icons PNG">Icons</button>
-          <button data-cat="Animals PNG">Animals</button>
-          <button data-cat="Flowers PNG">Flowers</button>
-          <button data-cat="Food PNG">Food</button>
-          <button data-cat="Cartoon PNG">Cartoon</button>
-          <button data-cat="Text PNG">Text</button>
+          <a href="/category/logo-png">Logo</a>
+          <a href="/category/icon-png">Icons</a>
+          <a href="/category/animal-png">Animals</a>
+          <a href="/category/flower-png">Flowers</a>
+          <a href="/category/food-png">Food</a>
+          <a href="/category/cartoon-png">Cartoon</a>
+          <a href="/category/text-png">Text</a>
         </div>
 
       </div>
@@ -85,6 +85,8 @@
     <div class="masonry" id="pngGrid"></div>
   </main>
 
+  <h2>Latest PNG Images</h2>
+  
   <div id="loader">Loading more...</div>
   
   <footer class="site-footer">
@@ -128,52 +130,6 @@
 
   // Click icon
   searchIcon.addEventListener('click', handleSearch);
-</script>
-
-<script>
-  document.querySelectorAll('.categories button').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const query = encodeURIComponent(btn.dataset.cat);
-      window.location.href = `/search?q=${query}`;
-    });
-  });
-</script>
-
-<script>
-const grid = document.getElementById("pngGrid");
-
-fetch(`${API}/api/pngs`)
-  .then(res => res.json())
-  .then(data => {
-    if (!Array.isArray(data)) {
-      console.error("API did not return array", data);
-      return;
-    }
-
-    data.forEach(png => {
-      const link = document.createElement("a");
-      link.href = `/image/${png.slug}`;
-      link.className = "card-link";
-
-      link.innerHTML = `
-        <div class="card png-bg">
-          <div class="card-image">
-            <img 
-              src="${png.thumbUrl}" 
-              alt="${png.title}" 
-              loading="lazy"
-              class="grid-image"
-            >
-          </div>
-          <div class="card-title">${png.title}</div>
-        </div>
-      `;
-
-      grid.appendChild(link);
-    });
-
-  })
-  .catch(err => console.error("Failed to load PNGs", err));
 </script>
 
 <script>

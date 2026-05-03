@@ -13,6 +13,7 @@
   <link rel="canonical" id="canonicalLink" href="">
   <link rel="preload" as="image" href="/images/placeholder.png">
   
+  <meta property="og:image:alt" content="Transparent PNG image high quality">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Free Transparent PNG Image Download">
   <meta property="og:description" content="Download high-quality PNG with transparent background.">
@@ -57,16 +58,21 @@
       <div class="image-card">
 
         <div class="image-preview">
-          <picture>
-            <source id="webpSource" type="image/webp">
-            <img id="mainPreview"
-                src="/images/placeholder.png"
-                alt="Transparent PNG image free download"
-                width="1200"
-                height="1200"
-                loading="lazy"
-                decoding="async">
-          </picture>
+          <figure>
+            <picture>
+              <source id="webpSource" type="image/webp">
+              <img id="mainPreview"
+                  src="/images/placeholder.png"
+                  alt="Transparent PNG image free download"
+                  width="1200"
+                  height="1200"
+                  loading="lazy"
+                  decoding="async">
+            </picture>
+            <figcaption id="imgCaption">
+              High-quality transparent PNG image for design use
+            </figcaption>
+          </figure>
         </div>
 
         <noscript>
@@ -239,7 +245,9 @@ if (!slug) {
       document.querySelector(".title-row h1").innerText = png.title;
 
       /* 🔥 MAIN IMAGE SHOULD USE PREVIEW WEBP */
-      img.alt = `${png.title} PNG transparent background free download`;
+      img.alt = `${png.title} transparent PNG, high resolution cutout image for design, free download`;
+      document.getElementById("imgCaption").innerText =
+        `${png.title} PNG with transparent background, high-quality image for graphic design, websites, and creative projects.`;
       img.decoding = "async";
 
       const downloadBtn = document.querySelector(".download-btn");
@@ -326,35 +334,31 @@ if (!slug) {
 <script>
   const slug2 = window.location.pathname.split("/").pop();
 
-  if (slug2) {
-    fetch(`${API}/api/pngs`)
-      .then(res => res.json())
-      .then(data => {
-        const grid = document.querySelector(".related-section .grid");
-        grid.innerHTML = "";
+fetch(`${API}/api/pngs/related/${slug2}`)
+  .then(res => res.json())
+  .then(data => {
+    const grid = document.querySelector(".related-section .grid");
+    grid.innerHTML = "";
 
-        data
-          .filter(p => p.slug !== slug2)
-          .slice(0, 6)
-          .forEach(png => {
-            const card = document.createElement("div");
-            card.className = "card";
+    data.forEach(png => {
+      const card = document.createElement("div");
+      card.className = "card";
 
-            card.innerHTML = `
-              <div class="card-image">
-                <img loading="lazy" src="${png.thumbUrl}" alt="${png.title} transparent PNG free download">
-              </div>
-              <p class="card-title">${png.title}</p>
-            `;
+      card.innerHTML = `
+        <div class="card-image">
+          <img loading="lazy" src="${png.thumbUrl}" alt="${png.title} transparent PNG free download">
+        </div>
+        <p class="card-title">${png.title}</p>
+      `;
 
-            card.onclick = () => {
-              window.location.href = `/image/${png.slug}`;
-            };
+      card.onclick = () => {
+        window.location.href = `/image/${png.slug}`;
+      };
 
-            grid.appendChild(card);
-          });
-      });
-  }
+      grid.appendChild(card);
+    });
+  });
+
 </script>
 
 </body>

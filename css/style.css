@@ -283,3 +283,15 @@ body {
   color: #7a8699;
   letter-spacing: 0.2px;
 }
+.more-btn {
+  background: #f2f2f2;
+  padding: 14px 28px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.more-btn:hover {
+  background: #e0e0e0;
+}

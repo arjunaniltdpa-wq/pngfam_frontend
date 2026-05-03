@@ -85,6 +85,12 @@
     <div class="masonry" id="pngGrid"></div>
   </main>
 
+  <div style="text-align:center; margin:30px;">
+    <button onclick="loadMoreImages()" class="more-btn">
+      Load More PNGs
+    </button>
+  </div>
+
   <h2>Latest PNG Images</h2>
   
   <footer class="site-footer">
@@ -131,6 +137,49 @@
   if (searchIcon) {
     searchIcon.addEventListener("click", handleSearch);
   }
+</script>
+
+<script>
+const API = "https://pngfam-backend.onrender.com";
+
+let page = 2;
+let loading = false;
+
+async function loadMoreImages() {
+  if (loading) return;
+  loading = true;
+
+  const res = await fetch(`${API}/api/pngs?limit=30`);
+  const data = await res.json();
+
+  const grid = document.querySelector(".masonry");
+
+  data.forEach(png => {
+    const thumb = png.thumbUrl;
+
+    const card = `
+      <a href="/image/${png.slug}" class="card-link">
+        <div class="card png-bg">
+          <div class="card-image">
+            <img src="${thumb}" alt="${png.title}" loading="lazy">
+          </div>
+          <div class="card-title">${png.title}</div>
+        </div>
+      </a>
+    `;
+
+    grid.insertAdjacentHTML("beforeend", card);
+  });
+
+  loading = false;
+}
+
+// scroll trigger
+window.addEventListener("scroll", () => {
+  if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 300) {
+    loadMoreImages();
+  }
+});
 </script>
 
 </html>

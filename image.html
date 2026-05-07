@@ -244,11 +244,23 @@ if (!slug) {
     })
     .then(png => {
 
+      img.src = png.previewUrl;
+      document.getElementById("webpSource").srcset = png.previewUrl;
+
       /* 🔥 USE PREVIEW / WEBP IMAGE */
       const img = document.getElementById("mainPreview");
-      
+
+      document.querySelector(".title-row h1").innerText =
+        `${png.title} PNG Transparent Background`;
+      document.querySelector(".subtitle").innerText =
+        "High Quality Transparent PNG Image";      
       /* 🔥 MAIN IMAGE SHOULD USE PREVIEW WEBP */
+      /* 🔥 MAIN IMAGE SHOULD USE PREVIEW WEBP */
+      img.src = png.previewUrl;
+      document.getElementById("webpSource").srcset = png.previewUrl;
+
       img.alt = `${png.title} transparent PNG, high resolution cutout image for design, free download`;
+
       document.getElementById("imgCaption").innerText =
         `${png.title} PNG with transparent background, high-quality image for graphic design, websites, and creative projects.`;
       img.decoding = "async";

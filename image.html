@@ -252,6 +252,11 @@ if (!slug) {
 
     .then(png => {
 
+      // CLEAN TITLE FIRST
+      const cleanTitle = png.slug
+        .replace(/-/g, " ")
+        .replace(/\b\w/g, l => l.toUpperCase());
+
       // MAIN IMAGE
       const img = document.getElementById("mainPreview");
 
@@ -267,11 +272,6 @@ if (!slug) {
       // IMAGE CAPTION
       document.getElementById("imgCaption").innerText =
         `${cleanTitle} PNG with transparent background, high-quality image for graphic design, websites, and creative projects.`;
-
-      // PAGE TITLE
-      const cleanTitle = png.slug
-        .replace(/-/g, " ")
-        .replace(/\b\w/g, l => l.toUpperCase());
 
       document.querySelector(".title-row h1").innerText =
         `${cleanTitle}`;

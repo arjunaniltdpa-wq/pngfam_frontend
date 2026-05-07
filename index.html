@@ -139,42 +139,6 @@ if (searchIcon) {
   searchIcon.addEventListener("click", handleSearch);
 }
 
-
-// 🔥 INITIAL LOAD
-async function loadImages() {
-  try {
-    if (!grid) return;
-
-    grid.innerHTML = "<p style='text-align:center'>Loading PNG images...</p>";
-
-    const res = await fetch(`${API}/api/pngs?limit=30`);
-    const data = await res.json();
-
-    grid.innerHTML = "";
-
-    data.forEach(png => {
-      const card = `
-        <a href="/image/${png.slug}" class="card-link">
-          <div class="card png-bg">
-            <div class="card-image">
-              <img src="${png.thumbUrl}" alt="${png.title}" loading="lazy">
-            </div>
-            <div class="card-title">${png.title}</div>
-          </div>
-        </a>
-      `;
-      grid.insertAdjacentHTML("beforeend", card);
-    });
-
-  } catch (err) {
-    console.error(err);
-    if (grid) {
-      grid.innerHTML = "<p>Failed to load images</p>";
-    }
-  }
-}
-
-
 // 🔥 LOAD MORE (SCROLL)
 let loadedSlugs = new Set();
 
@@ -213,7 +177,6 @@ async function loadMoreImages() {
   loading = false;
 }
 // 🚀 RUN
-loadImages();
 </script>
 
 </html>

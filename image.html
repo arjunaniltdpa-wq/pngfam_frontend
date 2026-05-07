@@ -62,12 +62,11 @@
             <picture>
               <source id="webpSource" type="image/webp">
               <img id="mainPreview"
-                  src=""
+                  src="/images/placeholder.png"
                   alt="Transparent PNG image free download"
                   width="1200"
                   height="1200"
-                  loading="eager"
-                  fetchpriority="high"
+                  loading="lazy"
                   decoding="async">
             </picture>
             <figcaption id="imgCaption">
@@ -223,12 +222,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 <!-- MAIN IMAGE LOAD -->
 <script>
-
 // Extract slug from clean URL: /image/:slug
-// FULL SLUG EXTRACTION
-let slug = decodeURIComponent(
-  window.location.pathname.replace("/image/", "")
-).replace(/-+$/, "");
+let slug = window.location.pathname.split("/").pop();
 
 // Fallback for old URLs: image.html?slug=xxx
 if (!slug || slug === "image.html") {
@@ -236,77 +231,107 @@ if (!slug || slug === "image.html") {
   slug = params.get("slug");
 }
 
-console.log("Slug:", slug);
-
+console.log("Slug:", slug); // debug
 if (!slug) {
-
   window.location.href = "/";
-
 } else {
 
   fetch(`${API}/api/pngs/${slug}`)
     .then(res => {
-
       if (!res.ok) throw new Error("Not found");
-
       return res.json();
-
     })
-
     .then(png => {
 
-      // CLEAN TITLE FIRST
-      const cleanTitle = png.slug
-        .replace(/-/g, " ")
-        .replace(/\b\w/g, l => l.toUpperCase());
-
-      // MAIN IMAGE
+      /* 🔥 USE PREVIEW / WEBP IMAGE */
       const img = document.getElementById("mainPreview");
+      
+      document.querySelector(".title-row h1").innerText = png.title;
 
-      img.src = png.previewUrl;
-
-      document.getElementById("webpSource").srcset =
-        png.previewUrl;
-
-      // IMAGE ALT
-      img.alt =
-        `${cleanTitle} transparent PNG, high resolution cutout image for design, free download`;
-
-      // IMAGE CAPTION
+      /* 🔥 MAIN IMAGE SHOULD USE PREVIEW WEBP */
+      img.alt = `${png.title} transparent PNG, high resolution cutout image for design, free download`;
       document.getElementById("imgCaption").innerText =
-        `${cleanTitle} PNG with transparent background, high-quality image for graphic design, websites, and creative projects.`;
+        `${png.title} PNG with transparent background, high-quality image for graphic design, websites, and creative projects.`;
+      img.decoding = "async";
 
-      document.querySelector(".title-row h1").innerText =
-        `${cleanTitle}`;
+      const downloadBtn = document.querySelector(".download-btn");
 
-      // SUBTITLE
-      document.querySelector(".subtitle").innerText =
-        "High Quality Transparent PNG Image";
+      downloadBtn.href = `${API}/api/pngs/${png.slug}/download`;
+      downloadBtn.removeAttribute("download"); // important
 
-      // BROWSER TITLE
-      document.title =
-        `${cleanTitle} PNG Transparent Background Free Download`;
+      downloadBtn.querySelector("span").innerText =
+        `Download PNG (${png.width} × ${png.height})`;
 
-      // DOWNLOAD BUTTON
-      const downloadBtn =
-        document.querySelector(".download-btn");
+      /* Tags */
+      const tagsBox = document.querySelector(".tags");
+      tagsBox.innerHTML = "";
+      (png.tags || []).forEach(tag => {
+        const span = document.createElement("span");
+        span.innerText = tag;
+        tagsBox.appendChild(span);
+      });
 
-      downloadBtn.href =
-        `${API}/api/pngs/${png.slug}/download`;
+      document.getElementById("webpSource").srcset = png.previewUrl;
+      img.src = png.previewUrl || png.originalUrl;
 
-      downloadBtn.removeAttribute("download");
+      /* SEO */
+        const seoDescription = `Download ${png.title} PNG with transparent background in HD resolution. Free for personal and commercial use. High-quality transparent PNG perfect for design, websites, presentations and marketing projects.`;
 
+        document.getElementById("breadcrumbTitle").innerText = png.title;
+
+        /* ================= IMAGE SCHEMA (JSON-LD) ================= */
+
+        const schema = {
+          "@context": "https://schema.org",
+          "@type": "ImageObject",
+          "representativeOfPage": true,
+          "name": png.title,
+          "description": png.description || `Download ${png.title} PNG with transparent background`,
+          "contentUrl": png.previewUrl || png.originalUrl,
+          "thumbnailUrl": png.previewUrl || png.thumbUrl,
+          "width": png.width,
+          "height": png.height,
+          "encodingFormat": "image/png",
+          "license": "https://www.pngfam.com/license",
+          "acquireLicensePage": "https://www.pngfam.com/license",
+          "url": `${window.location.origin}/image/${png.slug}`,
+          "author": {
+          "@type": "Organization",
+          "name": "PNGfam"
+          },
+          "creator": {
+          "@type": "Organization",
+          "name": "PNGfam"
+          },
+          "creditText": "PNGfam",
+          "copyrightNotice": "PNGfam"
+        };
+                
+        /* Inject schema */
+        let scriptTag = document.querySelector("#image-schema");
+        if (!scriptTag) {
+          scriptTag = document.createElement("script");
+          scriptTag.type = "application/ld+json";
+          scriptTag.id = "image-schema";
+          document.head.appendChild(scriptTag);
+        }
+
+        scriptTag.textContent = JSON.stringify(schema);
+
+        if (!document.querySelector('link[rel="preload"][as="image"]')) {
+          const preload = document.createElement("link");
+          preload.rel = "preload";
+          preload.as = "image";
+          preload.href = png.previewUrl || png.thumbUrl;
+          document.head.appendChild(preload);
+        }
     })
-
     .catch(() => {
-
       document.querySelector(".image-wrapper").innerHTML =
         "<p>Failed to load image</p>";
-
     });
 
 }
-
 </script>
 
 <!-- RELATED IMAGES (SAFE FALLBACK) -->

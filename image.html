@@ -66,7 +66,8 @@
                   alt="Transparent PNG image free download"
                   width="1200"
                   height="1200"
-                  loading="lazy"
+                  loading="eager"
+                  fetchpriority="high"
                   decoding="async">
             </picture>
             <figcaption id="imgCaption">
@@ -246,8 +247,6 @@ if (!slug) {
       /* 🔥 USE PREVIEW / WEBP IMAGE */
       const img = document.getElementById("mainPreview");
       
-      document.querySelector(".title-row h1").innerText = png.title;
-
       /* 🔥 MAIN IMAGE SHOULD USE PREVIEW WEBP */
       img.alt = `${png.title} transparent PNG, high resolution cutout image for design, free download`;
       document.getElementById("imgCaption").innerText =
@@ -259,72 +258,6 @@ if (!slug) {
       downloadBtn.href = `${API}/api/pngs/${png.slug}/download`;
       downloadBtn.removeAttribute("download"); // important
 
-      downloadBtn.querySelector("span").innerText =
-        `Download PNG (${png.width} × ${png.height})`;
-
-      /* Tags */
-      const tagsBox = document.querySelector(".tags");
-      tagsBox.innerHTML = "";
-      (png.tags || []).forEach(tag => {
-        const span = document.createElement("span");
-        span.innerText = tag;
-        tagsBox.appendChild(span);
-      });
-
-      document.getElementById("webpSource").srcset = png.previewUrl;
-      img.src = png.previewUrl || png.originalUrl;
-
-      /* SEO */
-        const seoDescription = `Download ${png.title} PNG with transparent background in HD resolution. Free for personal and commercial use. High-quality transparent PNG perfect for design, websites, presentations and marketing projects.`;
-
-        document.getElementById("breadcrumbTitle").innerText = png.title;
-
-        /* ================= IMAGE SCHEMA (JSON-LD) ================= */
-
-        const schema = {
-          "@context": "https://schema.org",
-          "@type": "ImageObject",
-          "representativeOfPage": true,
-          "name": png.title,
-          "description": png.description || `Download ${png.title} PNG with transparent background`,
-          "contentUrl": png.previewUrl || png.originalUrl,
-          "thumbnailUrl": png.previewUrl || png.thumbUrl,
-          "width": png.width,
-          "height": png.height,
-          "encodingFormat": "image/png",
-          "license": "https://www.pngfam.com/license",
-          "acquireLicensePage": "https://www.pngfam.com/license",
-          "url": `${window.location.origin}/image/${png.slug}`,
-          "author": {
-          "@type": "Organization",
-          "name": "PNGfam"
-          },
-          "creator": {
-          "@type": "Organization",
-          "name": "PNGfam"
-          },
-          "creditText": "PNGfam",
-          "copyrightNotice": "PNGfam"
-        };
-                
-        /* Inject schema */
-        let scriptTag = document.querySelector("#image-schema");
-        if (!scriptTag) {
-          scriptTag = document.createElement("script");
-          scriptTag.type = "application/ld+json";
-          scriptTag.id = "image-schema";
-          document.head.appendChild(scriptTag);
-        }
-
-        scriptTag.textContent = JSON.stringify(schema);
-
-        if (!document.querySelector('link[rel="preload"][as="image"]')) {
-          const preload = document.createElement("link");
-          preload.rel = "preload";
-          preload.as = "image";
-          preload.href = png.previewUrl || png.thumbUrl;
-          document.head.appendChild(preload);
-        }
     })
     .catch(() => {
       document.querySelector(".image-wrapper").innerHTML =

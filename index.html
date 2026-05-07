@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Free Transparent PNG Images Download – High Quality PNGs | PNGfam</title>
-  <meta name="description" content="Download free transparent PNG images in high quality. Explore thousands of HD PNG cutouts for graphic design, ads, websites, and creative projects." />
+  <title>Free Transparent PNG Images & HD PNG Download | PNGFam</title>
+  <meta name="description" content="Download free transparent PNG images, HD PNG cutouts, mockups, logos, icons, gaming assets, and creative graphics with no background. Explore high-quality PNG downloads for graphic design, websites, YouTube thumbnails, branding, and digital projects on PNGFam." />
   <link rel="stylesheet" href="css/style.css" />
 
   <script type="application/ld+json">
@@ -76,7 +76,7 @@
     <h1>Free Transparent PNG Images Download for Designers</h1>
     <p>
     Download thousands of free PNG images with transparent backgrounds.
-     Perfect for graphic design, websites, ads, and creative projects.
+    Perfect for graphic design, websites, ads, and creative projects.
     Browse high-quality HD PNG images including logos, icons, animals, and more.
     </p>
   </section>
@@ -94,7 +94,66 @@
       Load More PNGs
     </button>
   </div>
+  <section class="seo-content">
+
+    <h2>Free Transparent PNG Images for Creative Design Projects</h2>
+
+    <p>
+      PNGFam provides thousands of high-quality transparent PNG images for graphic designers, website creators, digital marketers, content creators, students, and businesses. Browse a massive collection of free PNG cutouts including logos, icons, gaming assets, animals, flowers, food items, technology devices, cars, backgrounds, mockups, and creative design elements with transparent backgrounds.
+    </p>
+
+    <p>
+      Our HD transparent PNG images are optimized for graphic design projects, YouTube thumbnails, social media posts, website banners, e-commerce stores, UI/UX design, presentations, advertising campaigns, posters, digital artwork, and branding materials. Every PNG image is carefully processed with clean transparent edges for professional creative use.
+    </p>
+
+    <p>
+      Explore trending transparent PNG categories including gaming PNGs, car PNGs, anime PNGs, mobile phone mockups, laptop PNGs, nature graphics, cartoon characters, aesthetic objects, fashion elements, and modern design resources. PNGFam continuously updates its library with fresh HD PNG assets suitable for personal and commercial design projects.
+    </p>
+
+  </section>  
+
+  <section class="homepage-categories">
+
+    <h2>Popular Transparent PNG Categories</h2>
+
+    <div class="category-links">
+
+      <a href="/category/car-png">Car PNG</a>
+      <a href="/category/gaming-png">Gaming PNG</a>
+      <a href="/category/laptop-png">Laptop PNG</a>
+      <a href="/category/logo-png">Logo PNG</a>
+      <a href="/category/anime-png">Anime PNG</a>
+      <a href="/category/mockup-png">Mockup PNG</a>
+      <a href="/category/flower-png">Flower PNG</a>
+      <a href="/category/animal-png">Animal PNG</a>
+      <a href="/category/mobile-png">Mobile PNG</a>
+      <a href="/category/background-png">Background PNG</a>
+
+    </div>
+
+  </section>
   
+  <section class="homepage-faq">
+
+    <h2>Frequently Asked Questions</h2>
+
+    <h3>What are transparent PNG images?</h3>
+    <p>
+      Transparent PNG images are graphics with no background, allowing designers to place objects seamlessly into websites, banners, thumbnails, advertisements, and creative projects.
+    </p>
+
+    <h3>Can I use PNG images for commercial projects?</h3>
+    <p>
+      PNGFam provides high-quality PNG images suitable for personal and commercial creative projects including websites, social media, presentations, and digital marketing.
+    </p>
+
+    <h3>Why use PNG files instead of JPG?</h3>
+    <p>
+      PNG files support transparent backgrounds and higher-quality edge rendering, making them ideal for logos, mockups, product cutouts, UI design, and layered graphic compositions.
+    </p>
+
+  </section>
+    
   <footer class="site-footer">
     <div class="footer-inner">
       <nav class="footer-links">
@@ -139,6 +198,42 @@ if (searchIcon) {
   searchIcon.addEventListener("click", handleSearch);
 }
 
+
+// 🔥 INITIAL LOAD
+async function loadImages() {
+  try {
+    if (!grid) return;
+
+    grid.innerHTML = "<p style='text-align:center'>Loading PNG images...</p>";
+
+    const res = await fetch(`${API}/api/pngs?limit=20`);
+    const data = await res.json();
+
+    grid.innerHTML = "";
+
+    data.forEach(png => {
+      const card = `
+        <a href="/image/${png.slug}" class="card-link">
+          <div class="card png-bg">
+            <div class="card-image">
+              <img src="${png.thumbUrl}" alt="${png.title}" loading="lazy">
+            </div>
+            <div class="card-title">${png.title}</div>
+          </div>
+        </a>
+      `;
+      grid.insertAdjacentHTML("beforeend", card);
+    });
+
+  } catch (err) {
+    console.error(err);
+    if (grid) {
+      grid.innerHTML = "<p>Failed to load images</p>";
+    }
+  }
+}
+
+
 // 🔥 LOAD MORE (SCROLL)
 let loadedSlugs = new Set();
 
@@ -177,6 +272,7 @@ async function loadMoreImages() {
   loading = false;
 }
 // 🚀 RUN
+loadImages();
 </script>
 
 </html>

@@ -225,7 +225,10 @@ document.addEventListener("DOMContentLoaded", () => {
 <script>
 
 // Extract slug from clean URL: /image/:slug
-let slug = window.location.pathname.split("/").pop();
+// FULL SLUG EXTRACTION
+let slug = decodeURIComponent(
+  window.location.pathname.replace("/image/", "")
+).replace(/-+$/, "");
 
 // Fallback for old URLs: image.html?slug=xxx
 if (!slug || slug === "image.html") {

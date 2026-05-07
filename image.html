@@ -223,6 +223,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 <!-- MAIN IMAGE LOAD -->
 <script>
+
 // Extract slug from clean URL: /image/:slug
 let slug = window.location.pathname.split("/").pop();
 
@@ -232,51 +233,77 @@ if (!slug || slug === "image.html") {
   slug = params.get("slug");
 }
 
-console.log("Slug:", slug); // debug
+console.log("Slug:", slug);
+
 if (!slug) {
+
   window.location.href = "/";
+
 } else {
 
   fetch(`${API}/api/pngs/${slug}`)
     .then(res => {
+
       if (!res.ok) throw new Error("Not found");
+
       return res.json();
+
     })
+
     .then(png => {
 
-      img.src = png.previewUrl;
-      document.getElementById("webpSource").srcset = png.previewUrl;
-
-      /* 🔥 USE PREVIEW / WEBP IMAGE */
+      // MAIN IMAGE
       const img = document.getElementById("mainPreview");
 
-      document.querySelector(".title-row h1").innerText =
-        `${png.title} PNG Transparent Background`;
-      document.querySelector(".subtitle").innerText =
-        "High Quality Transparent PNG Image";      
-      /* 🔥 MAIN IMAGE SHOULD USE PREVIEW WEBP */
-      /* 🔥 MAIN IMAGE SHOULD USE PREVIEW WEBP */
       img.src = png.previewUrl;
-      document.getElementById("webpSource").srcset = png.previewUrl;
 
-      img.alt = `${png.title} transparent PNG, high resolution cutout image for design, free download`;
+      document.getElementById("webpSource").srcset =
+        png.previewUrl;
 
+      // IMAGE ALT
+      img.alt =
+        `${cleanTitle} transparent PNG, high resolution cutout image for design, free download`;
+
+      // IMAGE CAPTION
       document.getElementById("imgCaption").innerText =
-        `${png.title} PNG with transparent background, high-quality image for graphic design, websites, and creative projects.`;
-      img.decoding = "async";
+        `${cleanTitle} PNG with transparent background, high-quality image for graphic design, websites, and creative projects.`;
 
-      const downloadBtn = document.querySelector(".download-btn");
+      // PAGE TITLE
+      const cleanTitle = png.slug
+        .replace(/-/g, " ")
+        .replace(/\b\w/g, l => l.toUpperCase());
 
-      downloadBtn.href = `${API}/api/pngs/${png.slug}/download`;
-      downloadBtn.removeAttribute("download"); // important
+      document.querySelector(".title-row h1").innerText =
+        `${cleanTitle}`;
+
+      // SUBTITLE
+      document.querySelector(".subtitle").innerText =
+        "High Quality Transparent PNG Image";
+
+      // BROWSER TITLE
+      document.title =
+        `${cleanTitle} PNG Transparent Background Free Download`;
+
+      // DOWNLOAD BUTTON
+      const downloadBtn =
+        document.querySelector(".download-btn");
+
+      downloadBtn.href =
+        `${API}/api/pngs/${png.slug}/download`;
+
+      downloadBtn.removeAttribute("download");
 
     })
+
     .catch(() => {
+
       document.querySelector(".image-wrapper").innerHTML =
         "<p>Failed to load image</p>";
+
     });
 
 }
+
 </script>
 
 <!-- RELATED IMAGES (SAFE FALLBACK) -->

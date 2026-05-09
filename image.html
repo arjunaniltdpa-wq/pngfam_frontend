@@ -271,52 +271,10 @@ if (!slug) {
         tagsBox.appendChild(span);
       });
 
-      document.getElementById("webpSource").srcset = png.previewUrl;
-      img.src = png.previewUrl || png.originalUrl;
-
       /* SEO */
         const seoDescription = `Download ${png.title} PNG with transparent background in HD resolution. Free for personal and commercial use. High-quality transparent PNG perfect for design, websites, presentations and marketing projects.`;
 
         document.getElementById("breadcrumbTitle").innerText = png.title;
-
-        /* ================= IMAGE SCHEMA (JSON-LD) ================= */
-
-        const schema = {
-          "@context": "https://schema.org",
-          "@type": "ImageObject",
-          "representativeOfPage": true,
-          "name": png.title,
-          "description": png.description || `Download ${png.title} PNG with transparent background`,
-          "contentUrl": png.previewUrl || png.originalUrl,
-          "thumbnailUrl": png.previewUrl || png.thumbUrl,
-          "width": png.width,
-          "height": png.height,
-          "encodingFormat": "image/png",
-          "license": "https://www.pngfam.com/license",
-          "acquireLicensePage": "https://www.pngfam.com/license",
-          "url": `${window.location.origin}/image/${png.slug}`,
-          "author": {
-          "@type": "Organization",
-          "name": "PNGfam"
-          },
-          "creator": {
-          "@type": "Organization",
-          "name": "PNGfam"
-          },
-          "creditText": "PNGfam",
-          "copyrightNotice": "PNGfam"
-        };
-                
-        /* Inject schema */
-        let scriptTag = document.querySelector("#image-schema");
-        if (!scriptTag) {
-          scriptTag = document.createElement("script");
-          scriptTag.type = "application/ld+json";
-          scriptTag.id = "image-schema";
-          document.head.appendChild(scriptTag);
-        }
-
-        scriptTag.textContent = JSON.stringify(schema);
 
         if (!document.querySelector('link[rel="preload"][as="image"]')) {
           const preload = document.createElement("link");

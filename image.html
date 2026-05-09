@@ -245,10 +245,7 @@ if (!slug) {
       /* 🔥 USE PREVIEW / WEBP IMAGE */
       const img = document.getElementById("mainPreview");
       
-      document.querySelector(".title-row h1").innerText = png.title;
-
       /* 🔥 MAIN IMAGE SHOULD USE PREVIEW WEBP */
-      img.alt = `${png.title} transparent PNG, high resolution cutout image for design, free download`;
       document.getElementById("imgCaption").innerText =
         `${png.title} PNG with transparent background, high-quality image for graphic design, websites, and creative projects.`;
       img.decoding = "async";
@@ -269,9 +266,6 @@ if (!slug) {
         span.innerText = tag;
         tagsBox.appendChild(span);
       });
-
-      /* SEO */
-        const seoDescription = `Download ${png.title} PNG with transparent background in HD resolution. Free for personal and commercial use. High-quality transparent PNG perfect for design, websites, presentations and marketing projects.`;
 
         document.getElementById("breadcrumbTitle").innerText = png.title;
 
@@ -309,12 +303,12 @@ fetch(`${API}/api/pngs/related/${slug2}`)
         <div class="card-image">
           <img loading="lazy" src="${png.thumbUrl}" alt="${png.title} transparent PNG free download">
         </div>
-        <p class="card-title">${png.title}</p>
+        <p class="card-title">
+          <a href="/image/${png.slug}">
+            ${png.title}
+          </a>
+        </p>
       `;
-
-      card.onclick = () => {
-        window.location.href = `/image/${png.slug}`;
-      };
 
       grid.appendChild(card);
     });

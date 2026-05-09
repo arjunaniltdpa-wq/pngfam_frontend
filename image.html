@@ -244,6 +244,7 @@ if (!slug) {
 
       /* 🔥 USE PREVIEW / WEBP IMAGE */
       const img = document.getElementById("mainPreview");
+      img.src = png.previewUrl || png.originalUrl;
       
       /* 🔥 MAIN IMAGE SHOULD USE PREVIEW WEBP */
       document.getElementById("imgCaption").innerText =

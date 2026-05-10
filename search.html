@@ -421,25 +421,47 @@ function renderPagination(total) {
   }
 }
 /* =========================
-    SEARCH RESULTS (50)
+    SEARCH RESULTS
 ========================== */
 function loadSearchResults() {
-  let url =
-  `${API_BASE}/api/pngs/search?q=${encodeURIComponent(cleanKeyword)}&sort=${currentSort}`;
 
-  // ✅ move here
-  grid.innerHTML = `<p style="text-align:center;">Loading PNG images...</p>`;
+  let url =
+    `${API_BASE}/api/pngs/search?q=${encodeURIComponent(cleanKeyword)}&sort=${currentSort}&limit=500`;
+
+  /* LOADING */
+
+  grid.innerHTML =
+    `<p style="text-align:center;">Loading PNG images...</p>`;
 
   fetch(url)
-    .then(res => res.json())
-    .then(data => {
 
-      document.getElementById("resultsCount").innerText =
-        `${data.length} results`;
-        
-      grid.innerHTML = ""; // clear loading
+    .then(res => res.json())
+
+    .then(response => {
+
+      /* SUPPORT BOTH API TYPES */
+
+      const data =
+        response.results || response;
+
+      const total =
+        response.total || data.length;
+
+      /* RESULTS COUNT */
+
+      document.getElementById(
+        "resultsCount"
+      ).innerText =
+        `${total} results`;
+
+      /* CLEAR */
+
+      grid.innerHTML = "";
+
+      /* NO RESULTS */
 
       if (!data.length) {
+
         grid.innerHTML = `
           <div class="empty-search">
 
@@ -452,13 +474,36 @@ function loadSearchResults() {
 
           </div>
         `;
+
+        /* SHOW RELATED */
+
         relatedWrapper.style.display =
           "block";
 
-        loadExploreMore();
+        relatedGrid.innerHTML = "";
+
+        fetch(`${API_BASE}/api/pngs?limit=8`)
+          .then(res => res.json())
+          .then(similar => {
+
+            similar.forEach(png =>
+              renderCard(
+                png,
+                relatedGrid
+              )
+            );
+
+          });
+
+        pagination.innerHTML = "";
 
         return;
       }
+
+      /* HIDE RELATED */
+
+      relatedWrapper.style.display =
+        "none";
 
       /* PAGE SLICE */
 
@@ -472,21 +517,35 @@ function loadSearchResults() {
       const paginated =
         data.slice(start, end);
 
+      /* RENDER */
+
       paginated.forEach(png =>
         renderCard(png, grid)
       );
 
       /* PAGINATION */
 
-      renderPagination(data.length);
+      renderPagination(total);
 
-      /* HIDE RELATED */
+    })
 
-      relatedWrapper.style.display =
-        "none";
+    .catch(err => {
+
+      console.error(err);
+
+      grid.innerHTML = `
+        <div class="empty-search">
+
+          <h2>Failed to load PNG images</h2>
+
+          <p>
+            Please try again later.
+          </p>
+
+        </div>
+      `;
     });
 }
-
 /* =========================
     INIT
 ========================== */

@@ -53,6 +53,7 @@
     <span id="breadcrumbTitle">Image</span>
   </nav>
 
+  <!-- IMAGE PAGE -->
   <section class="image-page">
 
     <div class="image-layout">
@@ -68,8 +69,9 @@
             <img
               id="mainPreview"
               src="/images/placeholder.png"
-              alt="Transparent PNG"
+              alt="Transparent PNG image"
               loading="lazy"
+              decoding="async"
             >
 
           </div>
@@ -103,8 +105,6 @@
             <span>Transparent</span>
           </div>
 
-          <!-- DETAILS -->
-
           <div class="image-meta">
 
             <div class="meta-row">
@@ -124,14 +124,13 @@
 
           </div>
 
-          <!-- DOWNLOAD -->
-
           <a class="download-btn" href="#">
-            <img src="/images/download.png" alt="">
-            <span>Download PNG</span>
-          </a>
 
-          <!-- SAVE -->
+            <img src="/images/download.png" alt="">
+
+            <span>Download PNG</span>
+
+          </a>
 
           <button class="save-btn">
             Save PNG
@@ -156,16 +155,19 @@
   
   <!-- RELATED IMAGES -->
   <section class="related-section">
-    <h2>Related PNG Images</h2>
 
-    <div class="container">
-      <div class="grid">
-        <div class="card skeleton"></div>
-        <div class="card skeleton"></div>
-        <div class="card skeleton"></div>
-        <div class="card skeleton"></div>
-      </div>
+    <div class="related-top">
+
+      <h2>Related PNG Images</h2>
+
+      <a href="/category/png" class="view-all">
+        View all →
+      </a>
+
     </div>
+
+    <div class="grid"></div>
+
   </section>
 
   <div class="more-wrapper">
@@ -182,28 +184,59 @@
     </div>
   </section>
 
-  <!-- INFO MODAL -->
-  <div class="info-modal" id="infoModal">
-    <div class="info-content">
-      <button class="close-icon" id="closeInfo">✕</button>
-      <h3>Image Details</h3>
-      <p>Background: Transparent</p>
-      <p>License: Free for personal & commercial use</p>
-    </div>
-  </div>
   
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <nav class="footer-links">
+<footer class="site-footer">
+
+  <div class="footer-inner">
+
+    <!-- LEFT -->
+
+    <div class="footer-brand">
+
+      <img src="/images/logo2.png" alt="PNGfam">
+
+      <p>
+        Free high-quality PNG images with transparent backgrounds.
+      </p>
+
+    </div>
+
+    <!-- LINKS -->
+
+    <div class="footer-columns">
+
+      <div class="footer-col">
+        <h4>Browse</h4>
+
+        <a href="/category/png">Popular</a>
+        <a href="/latest">Latest</a>
+        <a href="/search?q=logo png">Categories</a>
+      </div>
+
+      <div class="footer-col">
+        <h4>Legal</h4>
+
         <a href="/privacy-policy">Privacy Policy</a>
         <a href="/terms">Terms</a>
         <a href="/dmca">DMCA</a>
-        <a href="/license">License</a>
+      </div>
+
+      <div class="footer-col">
+        <h4>Support</h4>
+
         <a href="/contact">Contact</a>
-      </nav>
-      <p class="footer-copy">© 2026 PNGfam — Free Transparent PNG Images</p>
+        <a href="/license">License</a>
+      </div>
+
     </div>
-  </footer>
+
+  </div>
+
+  <div class="footer-bottom">
+    © 2026 PNGfam — Free Transparent PNG Images
+  </div>
+
+</footer>
 
 
 <script>
@@ -236,490 +269,123 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 
-<!-- INFO MODAL -->
-<script>
-  const infoBtn = document.getElementById('infoBtn');
-  const infoModal = document.getElementById('infoModal');
-  const closeIcon = document.getElementById('closeInfo');
-
-  if (infoBtn) {
-    infoBtn.onclick = () => infoModal.style.display = 'flex';
-    closeIcon.onclick = () => infoModal.style.display = 'none';
-    infoModal.onclick = e => {
-      if (e.target === infoModal) infoModal.style.display = 'none';
-    };
-  }
-</script>
 
 <!-- MAIN IMAGE LOAD -->
 <script>
-// Extract slug
+// Extract slug from clean URL: /image/:slug
 let slug = window.location.pathname.split("/").pop();
 
-// Fallback old URL
+// Fallback for old URLs: image.html?slug=xxx
 if (!slug || slug === "image.html") {
   const params = new URLSearchParams(window.location.search);
   slug = params.get("slug");
 }
 
-// Redirect if missing
+console.log("Slug:", slug); // debug
 if (!slug) {
-
   window.location.href = "/";
-
 } else {
 
   fetch(`${API}/api/pngs/${slug}`)
-
     .then(res => {
-
-      if (!res.ok) {
-        throw new Error("Not found");
-      }
-
+      if (!res.ok) throw new Error("Not found");
       return res.json();
     })
-
     .then(png => {
 
-      // MAIN IMAGE
-
+      /* 🔥 USE PREVIEW / WEBP IMAGE */
       const img = document.getElementById("mainPreview");
-
-      img.src =
-        png.previewUrl ||
-        png.originalUrl;
-
-      img.alt =
-        `${png.title} PNG transparent background`;
-
-      img.decoding = "async";
-
-      // TITLE
+      img.src = png.previewUrl || png.originalUrl;
 
       document.querySelector(".image-title").innerText =
         png.title;
 
-      // DIMENSIONS
-
       document.getElementById("imgDimensions").innerText =
         `${png.width} × ${png.height}`;
 
-      // BREADCRUMB
+      const downloadBtn = document.querySelector(".download-btn");
 
-      document.getElementById("breadcrumbTitle").innerText =
-        png.title;
-
-      // DOWNLOAD BUTTON
-
-      const downloadBtn =
-        document.querySelector(".download-btn");
-
-      downloadBtn.href =
-        `${API}/api/pngs/${png.slug}/download`;
+      downloadBtn.href = `${API}/api/pngs/${png.slug}/download`;
+      downloadBtn.removeAttribute("download"); // important
 
       downloadBtn.querySelector("span").innerText =
         `Download PNG (${png.width} × ${png.height})`;
 
-      // TAGS
-
-      const tagsBox =
-        document.querySelector(".tags");
-
+      /* Tags */
+      const tagsBox = document.querySelector(".tags");
       tagsBox.innerHTML = "";
-
       (png.tags || []).forEach(tag => {
-
-        const span =
-          document.createElement("span");
-
+        const span = document.createElement("span");
         span.innerText = tag;
-
         tagsBox.appendChild(span);
       });
 
-      // SEO
+        document.getElementById("breadcrumbTitle").innerText = png.title;
 
-      document.title =
-        `${png.title} PNG Transparent Background Free Download`;
-
-      document
-        .querySelector('meta[name="description"]')
-        .setAttribute(
-          "content",
-          `Download ${png.title} PNG with transparent background in HD quality.`
-        );
-
+        if (!document.querySelector('link[rel="preload"][as="image"]')) {
+          const preload = document.createElement("link");
+          preload.rel = "preload";
+          preload.as = "image";
+          preload.href = png.previewUrl || png.thumbUrl;
+          document.head.appendChild(preload);
+        }
     })
-
     .catch(() => {
-
-      document.querySelector(".image-page").innerHTML = `
-        <div style="
-          text-align:center;
-          padding:100px 20px;
-          font-size:20px;
-          color:#64748b;
-        ">
-          Failed to load PNG image
-        </div>
-      `;
+      document.querySelector(".image-wrapper").innerHTML =
+        "<p>Failed to load image</p>";
     });
 
 }
 </script>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mango PNG Images – Free Download</title>
-  <meta name="description" content="Free Mango PNG images with transparent background. Download high quality mango PNGs." />
-  <link rel="stylesheet" href="css/style.css" />
-  <link rel="stylesheet" href="css/search.css" />
-  <link rel="canonical" id="canonicalLink" href="" />
-
-</head>
-<body>
-
-<div class="search-header-inner">
-
-  <!-- TOP ROW -->
-
-  <div class="header-top-row">
-
-    <div class="logo">
-      <a href="/">
-        <img src="images/logo.png" alt="PNGfam">
-      </a>
-    </div>
-
-    <div class="search-box right-search">
-      <input type="text" id="searchInput" placeholder="Search PNG images..." />
-
-      <span class="search-icon">
-        <img src="images/search.png" alt="Search">
-      </span>
-    </div>
-
-  </div>
-
-  <!-- SLIDING CATEGORIES -->
-
-  <section class="top-categories">
-
-    <div class="categories-track">
-
-      <a href="/search?q=car png">Cars</a>
-      <a href="/search?q=anime png">Anime</a>
-      <a href="/search?q=gaming png">Gaming</a>
-      <a href="/search?q=flower png">Flowers</a>
-      <a href="/search?q=logo png">Logos</a>
-      <a href="/search?q=animal png">Animals</a>
-      <a href="/search?q=iphone png">iPhone</a>
-      <a href="/search?q=nature png">Nature</a>
-      <a href="/search?q=food png">Food</a>
-      <a href="/search?q=text png">Text</a>
-      <a href="/search?q=background png">Backgrounds</a>
-      <a href="/search?q=mockup png">Mockups</a>
-
-      <!-- DUPLICATE -->
-
-      <a href="/search?q=car png">Cars</a>
-      <a href="/search?q=anime png">Anime</a>
-      <a href="/search?q=gaming png">Gaming</a>
-      <a href="/search?q=flower png">Flowers</a>
-
-    </div>
-
-  </section>
-
-</div>
-
-<section class="results-wrapper">
-
-  <!-- TOP BAR -->
-
-  <div class="results-top">
-
-    <div>
-      <div class="breadcrumbs">
-        <a href="/">Home</a>
-        <span>›</span>
-        <span>Search</span>
-      </div>
-
-      <h1 id="searchTitle">Leaf PNG Images</h1>
-
-      <div class="related-tags">
-        <a href="#">green leaf</a>
-        <a href="#">leaf plant</a>
-        <a href="#">banana leaf</a>
-        <a href="#">nature png</a>
-      </div>
-    </div>
-
-    <div class="results-actions">
-      <span class="results-count" id="resultsCount">
-        0 results
-      </span>
-
-      <select class="sort-select">
-        <option>Most relevant</option>
-        <option>Newest</option>
-        <option>Popular</option>
-      </select>
-    </div>
-
-  </div>
-
-  <!-- MAIN LAYOUT -->
-
-  <div class="search-layout">
-
-    <!-- SIDEBAR -->
-
-    <aside class="filter-sidebar">
-
-      <div class="filter-box">
-        <h3>Category</h3>
-
-        <label><input type="checkbox"> Nature</label>
-        <label><input type="checkbox"> Plants</label>
-        <label><input type="checkbox"> Animals</label>
-        <label><input type="checkbox"> Flowers</label>
-      </div>
-
-      <div class="filter-box">
-        <h3>Orientation</h3>
-
-        <label><input type="checkbox"> Square</label>
-        <label><input type="checkbox"> Vertical</label>
-        <label><input type="checkbox"> Horizontal</label>
-      </div>
-
-      <div class="filter-box">
-        <h3>File Type</h3>
-
-        <label><input type="checkbox"> PNG</label>
-        <label><input type="checkbox"> Transparent PNG</label>
-      </div>
-
-    </aside>
-
-    <!-- RESULTS -->
-
-    <div class="results-content">
-
-      <div class="results-grid" id="resultsGrid"></div>
-
-      <!-- NO RESULTS -->
-
-      <div id="relatedWrapper" style="display:none;">
-
-        <h2 class="related-title">
-          Similar PNG Images
-        </h2>
-
-        <div class="results-grid" id="relatedGrid"></div>
-
-      </div>
-
-      <!-- PAGINATION -->
-
-      <div class="pagination-wrapper">
-
-        <button class="page-btn active">1</button>
-        <button class="page-btn">2</button>
-        <button class="page-btn">3</button>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-<footer class="site-footer">
-  <div class="footer-inner">
-    <nav class="footer-links">
-      <a href="/privacy-policy">Privacy Policy</a>
-      <a href="/terms">Terms</a>
-      <a href="/dmca">DMCA</a>
-      <a href="/license">License</a>
-      <a href="/contact">Contact</a>
-    </nav>
-    <p class="footer-copy">© 2026 PNGfam — Free Transparent PNG Images</p>
-  </div>
-</footer>
-  
 <script>
 
-document.addEventListener("DOMContentLoaded", () => {
-
-  /* =========================
-     CONFIG
-  ========================== */
-const API_BASE = "https://pngfam-backend.onrender.com";
-const SEARCH_LIMIT = 50;
-const EXPLORE_LIMIT = 20;
-
-let searchPage = 1;
-
-
 /* =========================
-    SEARCH QUERY
-========================== */
-const params = new URLSearchParams(window.location.search);
-const keyword = params.get("q");
+   SMART HEADER
+========================= */
 
-const searchInput = document.getElementById("searchInput");
-const searchTitle = document.getElementById("searchTitle");
-const searchIcon = document.querySelector(".search-icon");
+const header =
+  document.querySelector(".search-header");
 
-const grid = document.getElementById("resultsGrid");
-const pagination = document.getElementById("searchPagination");
-const relatedWrapper = document.getElementById("relatedWrapper");
-const relatedGrid = document.getElementById("relatedGrid");
-const exploreBtn = document.getElementById("exploreBtnWrapper");
+let lastScroll = 0;
 
-let cleanKeyword = "";
+window.addEventListener("scroll", () => {
 
-function capitalizeWords(str) {
-  return str.replace(/\b\w/g, char => char.toUpperCase());
-}
+  const currentScroll =
+    window.pageYOffset;
 
-if (keyword) {
-  cleanKeyword = capitalizeWords(
-    decodeURIComponent(keyword.replace(/\+/g, " "))
-  );
+  /* SHRINK */
 
-  searchInput.value = cleanKeyword;
-  searchTitle.textContent = `${cleanKeyword} PNG Images`;
+  if (currentScroll > 40) {
 
-  const seoText = `Download high-quality ${cleanKeyword} PNG images with transparent background. 
-Free HD ${cleanKeyword} cutout PNGs for graphic design, ads, posters, websites, and creative projects. 
-No attribution required.`;
+    header.classList.add("shrink-header");
 
-  document.title = `${cleanKeyword} PNG Transparent Background Images Free Download HD`;
-
-  document
-    .querySelector('meta[name="description"]')
-    .setAttribute(
-      "content",
-      `Free ${cleanKeyword} PNG images with transparent background. Download high quality ${cleanKeyword} PNGs.`
-    );
-
-  const seoBlock = document.getElementById("searchSeoText");
-  if (seoBlock) seoBlock.innerText = seoText;
-
-  /* Canonical URL */
-  const canonical = document.getElementById("canonicalLink");
-  if (canonical) {
-    const normalizedKeyword = cleanKeyword.toLowerCase().trim();
-    canonical.href = `${window.location.origin}/search?q=${encodeURIComponent(normalizedKeyword)}`;
-  }
-  
-
-} else {
-  searchTitle.textContent = "All PNG Images";
-}
-
-/* =========================
-    SEARCH BAR
-========================== */
-function doSearch() {
-  const q = searchInput.value.trim();
-  if (!q) return;
-  window.location.href = `/search?q=${encodeURIComponent(q)}`;
-}
-
-searchInput.addEventListener("keydown", e => {
-  if (e.key === "Enter") doSearch();
-});
-
-if (searchIcon) {
-  searchIcon.addEventListener("click", doSearch);
-}
-
-/* =========================
-    CARD
-========================== */
-function renderCard(png, target) {
-  const title = png.title;
-
-  const card = document.createElement("a");
-  card.href = `/image/${png.slug}`;
-  card.className = "card image-card-box";
-  card.innerHTML = `
-    <div class="card-image checker-bg">
-      <img src="${png.thumbUrl}" alt="${title} PNG transparent background free download">
-    </div>
-    <h3 class="card-title">${title}</h3>
-  `;
-  target.appendChild(card);
-}
-
-
-/* =========================
-    SEARCH RESULTS (50)
-========================== */
-function loadSearchResults() {
-  let url;
-
-  if (!cleanKeyword) {
-    url = `${API_BASE}/api/pngs?limit=50`;
   } else {
-    url = `${API_BASE}/api/pngs/search?q=${encodeURIComponent(cleanKeyword)}&limit=50`;
+
+    header.classList.remove("shrink-header");
   }
 
-  // ✅ move here
-  grid.innerHTML = `<p style="text-align:center;">Loading PNG images...</p>`;
+  /* HIDE ON DOWN */
 
-  fetch(url)
-    .then(res => res.json())
-    .then(data => {
+  if (
+    currentScroll > lastScroll &&
+    currentScroll > 220
+  ) {
 
-      grid.innerHTML = ""; // clear loading
+    header.classList.add("hide-header");
 
-      if (!data.length) {
-        grid.innerHTML = `
-          <p class="no-results">
-            No PNG images found for "<strong>${cleanKeyword}</strong>". Showing similar images below.
-          </p>
-        `;
-        loadExploreMore();
-        return;
-      }
+  }
 
-      data.forEach(png => renderCard(png, grid));
-      pagination.style.display = "none";
-    });
-}
+  /* SHOW ON UP */
 
-/* =========================
-    EXPLORE MORE (20)
-========================== */
-function loadExploreMore() {
-  relatedWrapper.style.display = "block";
-  relatedGrid.innerHTML = "";
+  else {
 
-  fetch(`${API_BASE}/api/pngs?limit=20`)
-    .then(res => res.json())
-    .then(data => {
-      data.forEach(png => renderCard(png, relatedGrid));
-      exploreBtn.style.display = "block";
-    });
-}
+    header.classList.remove("hide-header");
+  }
 
-/* =========================
-    INIT
-========================== */
-loadSearchResults();
-
+  lastScroll = currentScroll;
 });
+
 </script>
 
 <!-- RELATED IMAGES (SAFE FALLBACK) -->

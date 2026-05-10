@@ -564,3 +564,38 @@ body{
     font-size:34px;
   }
 }
+
+/* =========================
+   EMPTY SEARCH
+========================= */
+
+.empty-search{
+  grid-column:1/-1;
+
+  background:#fff;
+
+  border-radius:28px;
+
+  padding:70px 30px;
+
+  text-align:center;
+
+  border:1px solid #edf2f7;
+
+  box-shadow:
+    0 10px 30px rgba(15,23,42,.04);
+}
+
+.empty-search h2{
+  font-size:34px;
+
+  margin-bottom:16px;
+
+  font-weight:800;
+}
+
+.empty-search p{
+  color:#64748b;
+
+  font-size:16px;
+}

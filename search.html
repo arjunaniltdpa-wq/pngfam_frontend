@@ -81,7 +81,7 @@
 
       <h1 id="searchTitle">Leaf PNG Images</h1>
 
-      <div class="related-tags">
+      <div class="related-tags" id="relatedTags"></div>
         <a href="#">green leaf</a>
         <a href="#">leaf plant</a>
         <a href="#">banana leaf</a>
@@ -94,10 +94,20 @@
         0 results
       </span>
 
-      <select class="sort-select">
-        <option>Most relevant</option>
-        <option>Newest</option>
-        <option>Popular</option>
+      <select class="sort-select" id="sortSelect">
+
+        <option value="relevant">
+          Most relevant
+        </option>
+
+        <option value="newest">
+          Newest
+        </option>
+
+        <option value="popular">
+          Popular
+        </option>
+
       </select>
     </div>
 
@@ -157,7 +167,10 @@
 
       <!-- PAGINATION -->
 
-      <div class="pagination-wrapper">
+      <div
+        class="pagination-wrapper"
+        id="searchPagination">
+      </div>
 
         <button class="page-btn active">1</button>
         <button class="page-btn">2</button>
@@ -196,7 +209,7 @@ const SEARCH_LIMIT = 50;
 const EXPLORE_LIMIT = 20;
 
 let searchPage = 1;
-
+let currentSort = "relevant";
 
 /* =========================
     SEARCH QUERY
@@ -227,6 +240,28 @@ if (keyword) {
 
   searchInput.value = cleanKeyword;
   searchTitle.textContent = `${cleanKeyword} PNG Images`;
+
+  /* RELATED TAGS */
+
+  const tagsBox =
+    document.getElementById("relatedTags");
+
+  const relatedTags = [
+
+    cleanKeyword,
+    `${cleanKeyword} png`,
+    `transparent ${cleanKeyword}`,
+    `${cleanKeyword} clipart`,
+    `${cleanKeyword} background`
+
+  ];
+
+  tagsBox.innerHTML =
+    relatedTags.map(tag => `
+      <a href="/search?q=${encodeURIComponent(tag)}">
+        ${tag}
+      </a>
+    `).join("");  
 
   const seoText = `Download high-quality ${cleanKeyword} PNG images with transparent background. 
 Free HD ${cleanKeyword} cutout PNGs for graphic design, ads, posters, websites, and creative projects. 
@@ -273,6 +308,19 @@ if (searchIcon) {
   searchIcon.addEventListener("click", doSearch);
 }
 
+/* SORT */
+
+const sortSelect =
+  document.getElementById("sortSelect");
+
+sortSelect.addEventListener("change", () => {
+
+  currentSort =
+    sortSelect.value;
+
+  loadSearchResults();
+});
+
 /* =========================
     CARD
 ========================== */
@@ -287,15 +335,66 @@ function renderCard(png, target) {
       <img src="${png.thumbUrl}" alt="${title} PNG transparent background free download">
     </div>
     <h3 class="card-title">${title}</h3>
-  `;
+  `;  
   target.appendChild(card);
+}
+
+/* PAGINATION */
+
+function renderPagination(total) {
+
+  const pagination =
+    document.getElementById(
+      "searchPagination"
+    );
+
+  pagination.innerHTML = "";
+
+  const totalPages =
+    Math.ceil(total / 50);
+
+  if (totalPages <= 1) return;
+
+  for (
+    let i = 1;
+    i <= totalPages;
+    i++
+  ) {
+
+    const btn =
+      document.createElement("button");
+
+    btn.className =
+      "page-btn";
+
+    if (i === searchPage) {
+      btn.classList.add("active");
+    }
+
+    btn.innerText = i;
+
+    btn.onclick = () => {
+
+      searchPage = i;
+
+      loadSearchResults();
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    };
+
+    pagination.appendChild(btn);
+  }
 }
 
 /* =========================
     SEARCH RESULTS (50)
 ========================== */
 function loadSearchResults() {
-  let url;
+  let url =
+  `${API_BASE}/api/pngs/search?q=${encodeURIComponent(cleanKeyword)}&sort=${currentSort}`;
 
   if (!cleanKeyword) {
     url = `${API_BASE}/api/pngs?limit=50`;
@@ -310,19 +409,30 @@ function loadSearchResults() {
     .then(res => res.json())
     .then(data => {
 
+      document.getElementById("resultsCount").innerText =
+        `${data.length} results`;
+        
       grid.innerHTML = ""; // clear loading
 
       if (!data.length) {
         grid.innerHTML = `
-          <p class="no-results">
-            No PNG images found for "<strong>${cleanKeyword}</strong>". Showing similar images below.
-          </p>
+          <div class="empty-search">
+
+            <h2>No PNG images found</h2>
+
+            <p>
+              We couldn't find any PNG images for
+              "<strong>${cleanKeyword}</strong>"
+            </p>
+
+          </div>
         `;
         loadExploreMore();
         return;
       }
 
       data.forEach(png => renderCard(png, grid));
+      renderPagination(data.length);
       pagination.style.display = "none";
     });
 }

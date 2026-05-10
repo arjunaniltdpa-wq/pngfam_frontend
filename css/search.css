@@ -428,23 +428,23 @@ body{
   box-shadow:
     0 16px 40px rgba(15,23,42,.08);
 }
-
 /* IMAGE */
 
 .card-image{
   position:relative;
 
-  aspect-ratio:1/1;
-
-  padding:20px;
+  padding:16px;
 
   display:flex;
   align-items:center;
   justify-content:center;
 
   overflow:hidden;
-}
 
+  min-height:220px;
+
+  height:auto;
+}
 /* CHECKER */
 
 .checker-bg{
@@ -467,11 +467,13 @@ body{
 
 .card-image img{
   width:100%;
-  height:100%;
+  height:auto;
 
   object-fit:contain;
 
   transition:.35s ease;
+
+  display:block;
 }
 
 .image-card-box:hover img{

@@ -91,7 +91,7 @@ body{
 
   margin:0 auto 80px;
 
-  padding:170px 24px 0;
+  padding:40px 24px 0;
 }
 
 .image-layout{
@@ -700,9 +700,6 @@ body{
   color:#fff;
 
   transform:translateY(-2px);
-}
-.breadcrumbs{
-  padding-top:130px;
 }
 
 /* HEADER SHOW / HIDE */

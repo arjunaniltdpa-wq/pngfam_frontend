@@ -370,10 +370,6 @@ if (!slug) {
 
 <script>
 
-/* =========================
-   SMART HEADER
-========================= */
-
 const header =
   document.querySelector(".search-header");
 
@@ -384,29 +380,18 @@ window.addEventListener("scroll", () => {
   const currentScroll =
     window.pageYOffset;
 
-  /* SHRINK */
-
-  if (currentScroll > 40) {
-
-    header.classList.add("shrink-header");
-
-  } else {
-
-    header.classList.remove("shrink-header");
-  }
-
-  /* HIDE ON DOWN */
+  /* HIDE WHEN SCROLL DOWN */
 
   if (
     currentScroll > lastScroll &&
-    currentScroll > 220
+    currentScroll > 120
   ) {
 
     header.classList.add("hide-header");
 
   }
 
-  /* SHOW ON UP */
+  /* SHOW WHEN SCROLL UP */
 
   else {
 

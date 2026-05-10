@@ -1,7 +1,7 @@
 body{
   background:#f6f7fb;
   color:#111827;
-  padding-top:92px;
+  padding-top:150px;
   font-family:Inter,sans-serif;
 }
 
@@ -20,7 +20,7 @@ body{
 
   border-bottom:1px solid #e5e7eb;
 
-  padding:0px 30px;
+  padding:0;
 }
 
 .search-header-inner{
@@ -31,23 +31,22 @@ body{
 /* TOP ROW */
 
 .header-top-row{
-  display:flex;
-  align-items:center;
-  gap:24px;
+  max-width:1500px;
 
-  padding:14px 0 10px;
+  margin:auto;
+
+  min-height:84px;
 }
-
 /* LOGO */
 
 .logo{
   display:flex;
   align-items:center;
-  margin-top:40px;
 
-  height:58px;
+  height:42px;
+
+  flex-shrink:0;
 }
-
 .logo img{
   height:50px;
 
@@ -639,14 +638,112 @@ body{
 /* SEARCH ICON */
 
 .search-icon{
+  position:absolute;
+
+  right:8px;
+  top:50%;
+
+  transform:translateY(-50%);
+
   width:42px;
   height:42px;
 
-  transition:all .25s ease;
+  border-radius:14px;
+
+  background:#2563eb;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  cursor:pointer;
+
+  box-shadow:
+    0 10px 24px rgba(37,99,235,.18);
 }
 
+.search-icon img{
+  width:18px;
+  height:18px;
+
+  object-fit:contain;
+
+  filter:brightness(0) invert(1);
+}
 .search-header.shrink-header
 .search-icon{
   width:36px;
   height:36px;
+}
+
+.more-wrapper{
+  width:100%;
+
+  display:flex;
+  justify-content:center;
+
+  margin:20px 0 70px;
+}
+
+/* =========================
+   POPULAR SECTION
+========================= */
+
+.popular-section{
+  max-width:1500px;
+
+  margin:0 auto 80px;
+
+  padding:0 24px;
+}
+
+.popular-section h2{
+  font-size:34px;
+
+  font-weight:800;
+
+  margin-bottom:24px;
+
+  letter-spacing:-1px;
+}
+
+/* LINKS */
+
+.popular-links{
+  display:flex;
+  flex-wrap:wrap;
+
+  gap:16px;
+}
+
+.popular-links a{
+  padding:14px 22px;
+
+  border-radius:18px;
+
+  background:#fff;
+
+  border:1px solid #edf2f7;
+
+  text-decoration:none;
+
+  color:#111827;
+
+  font-weight:600;
+
+  transition:.25s ease;
+
+  box-shadow:
+    0 4px 20px rgba(15,23,42,.03);
+}
+
+.popular-links a:hover{
+  transform:translateY(-4px);
+
+  border-color:#2563eb;
+
+  color:#2563eb;
+
+  box-shadow:
+    0 16px 40px rgba(15,23,42,.08);
 }

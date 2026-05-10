@@ -81,12 +81,6 @@
 
       <h1 id="searchTitle">Leaf PNG Images</h1>
 
-      <div class="related-tags" id="relatedTags"></div>
-        <a href="#">green leaf</a>
-        <a href="#">leaf plant</a>
-        <a href="#">banana leaf</a>
-        <a href="#">nature png</a>
-      </div>
     </div>
 
     <div class="results-actions">
@@ -433,12 +427,6 @@ function loadSearchResults() {
   let url =
   `${API_BASE}/api/pngs/search?q=${encodeURIComponent(cleanKeyword)}&sort=${currentSort}`;
 
-  if (!cleanKeyword) {
-    url = `${API_BASE}/api/pngs?limit=50`;
-  } else {
-    url = `${API_BASE}/api/pngs/search?q=${encodeURIComponent(cleanKeyword)}&limit=50`;
-  }
-
   // ✅ move here
   grid.innerHTML = `<p style="text-align:center;">Loading PNG images...</p>`;
 
@@ -464,23 +452,40 @@ function loadSearchResults() {
 
           </div>
         `;
+        relatedWrapper.style.display =
+          "block";
+
         loadExploreMore();
+
         return;
       }
 
-      data.forEach(png => renderCard(png, grid));
+      /* PAGE SLICE */
+
+      const start =
+        (searchPage - 1) *
+        SEARCH_LIMIT;
+
+      const end =
+        start + SEARCH_LIMIT;
+
+      const paginated =
+        data.slice(start, end);
+
+      paginated.forEach(png =>
+        renderCard(png, grid)
+      );
+
+      /* PAGINATION */
+
       renderPagination(data.length);
-      pagination.style.display = "none";
+
+      /* HIDE RELATED */
+
+      relatedWrapper.style.display =
+        "none";
     });
 }
-
-/* =========================
-    EXPLORE MORE (20)
-========================== */
-relatedWrapper.style.display =
-  "block";
-
-loadExploreMore();
 
 /* =========================
     INIT

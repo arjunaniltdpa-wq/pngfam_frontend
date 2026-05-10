@@ -35,7 +35,10 @@
 
 <body>
   <header class="header">
-    <img src="images/banner.png" alt="PNGfam banner" class="header-banner">
+
+    <div class="header-banner">
+      <img src="images/website-banner.jpg" alt="website-banner">
+    </div>
 
     <div class="header-inner">
 
@@ -177,11 +180,15 @@ const grid = document.getElementById("pngGrid");
 
 let loading = false;
 
+let limit = 20;
+let skip = 0;
+
 // 🔍 SEARCH
 function handleSearch() {
   if (!searchInput) return;
 
   const query = searchInput.value.trim();
+
   if (query !== "") {
     const encodedQuery = encodeURIComponent(query);
     window.location.href = `/search?q=${encodedQuery}`;
@@ -198,80 +205,85 @@ if (searchIcon) {
   searchIcon.addEventListener("click", handleSearch);
 }
 
-
-// 🔥 INITIAL LOAD
+// 🔥 LOAD IMAGES
 async function loadImages() {
-  try {
-    if (!grid) return;
 
-    grid.innerHTML = "<p style='text-align:center'>Loading PNG images...</p>";
-
-    const res = await fetch(`${API}/api/pngs?limit=20`);
-    const data = await res.json();
-
-    grid.innerHTML = "";
-
-    data.forEach(png => {
-      const card = `
-        <a href="/image/${png.slug}" class="card-link">
-          <div class="card png-bg">
-            <div class="card-image">
-              <img src="${png.thumbUrl}" alt="${png.title}" loading="lazy">
-            </div>
-            <div class="card-title">${png.title}</div>
-          </div>
-        </a>
-      `;
-      grid.insertAdjacentHTML("beforeend", card);
-    });
-
-  } catch (err) {
-    console.error(err);
-    if (grid) {
-      grid.innerHTML = "<p>Failed to load images</p>";
-    }
-  }
-}
-
-
-// 🔥 LOAD MORE (SCROLL)
-let loadedSlugs = new Set();
-
-async function loadMoreImages() {
   if (loading) return;
+
   loading = true;
 
   try {
-    const res = await fetch(`${API}/api/pngs?limit=200`);
+
+    // FIRST LOAD LOADER
+    if (skip === 0) {
+      grid.innerHTML =
+        "<p style='text-align:center'>Loading PNG images...</p>";
+    }
+
+    const res = await fetch(
+      `${API}/api/pngs?limit=${limit}&skip=${skip}`
+    );
+
     const data = await res.json();
 
-    data.forEach(png => {
+    // REMOVE LOADER
+    if (skip === 0) {
+      grid.innerHTML = "";
+    }
 
-      // ❌ skip duplicates
-      if (loadedSlugs.has(png.slug)) return;
+    // NO MORE IMAGES
+    if (data.length === 0) {
+      document.querySelector(".more-btn").innerText =
+        "No More Images";
+      return;
+    }
 
-      loadedSlugs.add(png.slug);
+    data.forEach((png) => {
 
       const card = `
         <a href="/image/${png.slug}" class="card-link">
           <div class="card png-bg">
             <div class="card-image">
-              <img src="${png.thumbUrl}" alt="${png.title}" loading="lazy">
+              <img
+                src="${png.thumbUrl}"
+                alt="${png.title}"
+                loading="lazy"
+              >
             </div>
-            <div class="card-title">${png.title}</div>
+
+            <div class="card-title">
+              ${png.title}
+            </div>
           </div>
         </a>
       `;
+
       grid.insertAdjacentHTML("beforeend", card);
     });
 
+    // NEXT 20
+    skip += limit;
+
   } catch (err) {
+
     console.error(err);
+
+    if (skip === 0) {
+      grid.innerHTML =
+        "<p>Failed to load images</p>";
+    }
+
   }
 
   loading = false;
 }
-// 🚀 RUN
+
+// 🔥 LOAD MORE BUTTON
+function loadMoreImages() {
+  loadImages();
+}
+
+// 🚀 INITIAL LOAD
 loadImages();
 </script>
 

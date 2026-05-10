@@ -12,58 +12,163 @@
 </head>
 <body>
 
-  <header class="search-header">
-    <div class="search-header-inner">
+<div class="search-header-inner">
 
-      <div class="logo">
-        <a href="/">
-          <img src="images/logo2.png" alt="PNGfam">
-        </a>
-      </div>
+  <!-- TOP ROW -->
 
-      <div class="search-box right-search">
-        <input type="text" id="searchInput" placeholder="Search PNG images..." />
-        <span class="search-icon">
-          <img src="images/search.png" alt="Search">
-        </span>
-      </div>
+  <div class="header-top-row">
+
+    <div class="logo">
+      <a href="/">
+        <img src="images/logo.png" alt="PNGfam">
+      </a>
+    </div>
+
+    <div class="search-box right-search">
+      <input type="text" id="searchInput" placeholder="Search PNG images..." />
+
+      <span class="search-icon">
+        <img src="images/search.png" alt="Search">
+      </span>
+    </div>
+
+  </div>
+
+  <!-- SLIDING CATEGORIES -->
+
+  <section class="top-categories">
+
+    <div class="categories-track">
+
+      <a href="/search?q=car png">Cars</a>
+      <a href="/search?q=anime png">Anime</a>
+      <a href="/search?q=gaming png">Gaming</a>
+      <a href="/search?q=flower png">Flowers</a>
+      <a href="/search?q=logo png">Logos</a>
+      <a href="/search?q=animal png">Animals</a>
+      <a href="/search?q=iphone png">iPhone</a>
+      <a href="/search?q=nature png">Nature</a>
+      <a href="/search?q=food png">Food</a>
+      <a href="/search?q=text png">Text</a>
+      <a href="/search?q=background png">Backgrounds</a>
+      <a href="/search?q=mockup png">Mockups</a>
+
+      <!-- DUPLICATE -->
+
+      <a href="/search?q=car png">Cars</a>
+      <a href="/search?q=anime png">Anime</a>
+      <a href="/search?q=gaming png">Gaming</a>
+      <a href="/search?q=flower png">Flowers</a>
 
     </div>
-  </header>
+
+  </section>
+
+</div>
 
 <section class="results-wrapper">
 
-  <div class="results-header">
-    <span class="result-label">Search result of</span>
-    <h1 id="searchTitle"></h1>
-  </div>
+  <!-- TOP BAR -->
 
-  <!-- SEO TEXT BLOCK -->
-  <div class="search-seo-text">
-    <p id="searchSeoText">
-      Download high-quality PNG images with transparent background. Free HD cutout PNGs for graphic design, ads, posters, websites, and creative projects. No attribution required.
-    </p>
-  </div>
+  <div class="results-top">
 
-  <main class="container">
+    <div>
+      <div class="breadcrumbs">
+        <a href="/">Home</a>
+        <span>›</span>
+        <span>Search</span>
+      </div>
 
-    <!-- SEARCH RESULTS -->
-    <div class="grid" id="resultsGrid"></div>
+      <h1 id="searchTitle">Leaf PNG Images</h1>
 
-    <!-- SEARCH PAGINATION -->
-    <div class="pagination-wrapper" id="searchPagination" style="display:none;">
-      <button id="nextSearchBtn" class="next-btn">Next →</button>
-    </div>
-
-    <!-- EXPLORE MORE FALLBACK -->
-    <div id="relatedWrapper" style="display:none;">
-      <h2 class="related-title">Explore more PNG images</h2>
-      <div class="grid" id="relatedGrid"></div>
-
-      <div class="explore-btn-wrapper" id="exploreBtnWrapper" style="display:none;">
-        <a href="/search?q=png" class="explore-btn">Explore more →</a>
+      <div class="related-tags">
+        <a href="#">green leaf</a>
+        <a href="#">leaf plant</a>
+        <a href="#">banana leaf</a>
+        <a href="#">nature png</a>
       </div>
     </div>
+
+    <div class="results-actions">
+      <span class="results-count" id="resultsCount">
+        0 results
+      </span>
+
+      <select class="sort-select">
+        <option>Most relevant</option>
+        <option>Newest</option>
+        <option>Popular</option>
+      </select>
+    </div>
+
+  </div>
+
+  <!-- MAIN LAYOUT -->
+
+  <div class="search-layout">
+
+    <!-- SIDEBAR -->
+
+    <aside class="filter-sidebar">
+
+      <div class="filter-box">
+        <h3>Category</h3>
+
+        <label><input type="checkbox"> Nature</label>
+        <label><input type="checkbox"> Plants</label>
+        <label><input type="checkbox"> Animals</label>
+        <label><input type="checkbox"> Flowers</label>
+      </div>
+
+      <div class="filter-box">
+        <h3>Orientation</h3>
+
+        <label><input type="checkbox"> Square</label>
+        <label><input type="checkbox"> Vertical</label>
+        <label><input type="checkbox"> Horizontal</label>
+      </div>
+
+      <div class="filter-box">
+        <h3>File Type</h3>
+
+        <label><input type="checkbox"> PNG</label>
+        <label><input type="checkbox"> Transparent PNG</label>
+      </div>
+
+    </aside>
+
+    <!-- RESULTS -->
+
+    <div class="results-content">
+
+      <div class="results-grid" id="resultsGrid"></div>
+
+      <!-- NO RESULTS -->
+
+      <div id="relatedWrapper" style="display:none;">
+
+        <h2 class="related-title">
+          Similar PNG Images
+        </h2>
+
+        <div class="results-grid" id="relatedGrid"></div>
+
+      </div>
+
+      <!-- PAGINATION -->
+
+      <div class="pagination-wrapper">
+
+        <button class="page-btn active">1</button>
+        <button class="page-btn">2</button>
+        <button class="page-btn">3</button>
+
+      </div>
+
+    </div>
+
+  </div>
+
 </section>
 
 <footer class="site-footer">

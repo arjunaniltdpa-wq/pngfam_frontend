@@ -53,61 +53,93 @@
     <span id="breadcrumbTitle">Image</span>
   </nav>
 
-  <!-- IMAGE PAGE -->
-  <section class="image-wrapper">
-      <div class="image-card">
+  <section class="image-page">
 
-        <div class="image-preview">
-          <figure>
-            <picture>
-              <img id="mainPreview"
-                  src="/images/placeholder.png"
-                  alt="Transparent PNG image free download"
-                  width="1200"
-                  height="1200"
-                  loading="lazy"
-                  decoding="async">
-            </picture>
-            <figcaption id="imgCaption">
-              High-quality transparent PNG image for design use
-            </figcaption>
-          </figure>
+    <div class="image-layout">
+
+      <!-- LEFT -->
+
+      <div class="preview-column">
+
+        <div class="preview-card">
+
+          <div class="image-preview checker-bg">
+
+            <img
+              id="mainPreview"
+              src="/images/placeholder.png"
+              alt="Transparent PNG"
+              loading="lazy"
+            >
+
+          </div>
+
         </div>
 
-        <noscript>
-          <img
-            src="/images/placeholder.png"
-            alt="PNG transparent background free download"
-            width="1200"
-            height="1200"
-          >
-        </noscript>
+        <!-- TAGS -->
 
-        <div class="title-row">
-          <h1>Free Transparent PNG Image</h1>
-          <button class="info-btn" id="infoBtn">ℹ️</button>
+        <div class="tags-card">
+
+          <h3>Tags</h3>
+
+          <div class="tags"></div>
+
         </div>
-        <h2 class="subtitle">High Quality Transparent PNG Image</h2>
-        <div class="tags"></div>
 
-      <!-- SEO DESCRIPTION BLOCK -->
-      <div class="image-seo-text">
-        <p id="seoText">
-        Download high-quality transparent PNG images in HD resolution. These free PNG images are perfect for graphic design, websites, presentations, and creative projects. Browse and download PNG images with transparent backgrounds for personal and commercial use.
-        </p>
-
-        <ul class="feature-list">
-          <li>✔ Transparent background PNG</li>
-          <li>✔ Free for personal & commercial use</li>
-          <li>✔ High resolution quality</li>
-          <li>✔ No attribution required</li>
-        </ul>
       </div>
 
-      <a class="download-btn" href="#" download>
-        <img src="/images/download.png" alt="Download">
-        <span>Download PNG</span>
-      </a>
+      <!-- RIGHT -->
+
+      <aside class="download-sidebar">
+
+        <div class="download-card">
+
+          <h1 class="image-title">
+            Free Transparent PNG
+          </h1>
+
+          <div class="mini-tags">
+            <span>PNG</span>
+            <span>Transparent</span>
+          </div>
+
+          <!-- DETAILS -->
+
+          <div class="image-meta">
+
+            <div class="meta-row">
+              <span>Dimensions</span>
+              <strong id="imgDimensions">2400 × 2400</strong>
+            </div>
+
+            <div class="meta-row">
+              <span>File type</span>
+              <strong>PNG</strong>
+            </div>
+
+            <div class="meta-row">
+              <span>License</span>
+              <strong>Free use</strong>
+            </div>
+
+          </div>
+
+          <!-- DOWNLOAD -->
+
+          <a class="download-btn" href="#">
+            <img src="/images/download.png" alt="">
+            <span>Download PNG</span>
+          </a>
+
+          <!-- SAVE -->
+
+          <button class="save-btn">
+            Save PNG
+          </button>
+
+        </div>
+
+      </aside>
 
     </div>
 
@@ -221,66 +253,117 @@ document.addEventListener("DOMContentLoaded", () => {
 
 <!-- MAIN IMAGE LOAD -->
 <script>
-// Extract slug from clean URL: /image/:slug
+// Extract slug
 let slug = window.location.pathname.split("/").pop();
 
-// Fallback for old URLs: image.html?slug=xxx
+// Fallback old URL
 if (!slug || slug === "image.html") {
   const params = new URLSearchParams(window.location.search);
   slug = params.get("slug");
 }
 
-console.log("Slug:", slug); // debug
+// Redirect if missing
 if (!slug) {
+
   window.location.href = "/";
+
 } else {
 
   fetch(`${API}/api/pngs/${slug}`)
+
     .then(res => {
-      if (!res.ok) throw new Error("Not found");
+
+      if (!res.ok) {
+        throw new Error("Not found");
+      }
+
       return res.json();
     })
+
     .then(png => {
 
-      /* 🔥 USE PREVIEW / WEBP IMAGE */
+      // MAIN IMAGE
+
       const img = document.getElementById("mainPreview");
-      img.src = png.previewUrl || png.originalUrl;
-      
-      /* 🔥 MAIN IMAGE SHOULD USE PREVIEW WEBP */
-      document.getElementById("imgCaption").innerText =
-        `${png.title} PNG with transparent background, high-quality image for graphic design, websites, and creative projects.`;
+
+      img.src =
+        png.previewUrl ||
+        png.originalUrl;
+
+      img.alt =
+        `${png.title} PNG transparent background`;
+
       img.decoding = "async";
 
-      const downloadBtn = document.querySelector(".download-btn");
+      // TITLE
 
-      downloadBtn.href = `${API}/api/pngs/${png.slug}/download`;
-      downloadBtn.removeAttribute("download"); // important
+      document.querySelector(".image-title").innerText =
+        png.title;
+
+      // DIMENSIONS
+
+      document.getElementById("imgDimensions").innerText =
+        `${png.width} × ${png.height}`;
+
+      // BREADCRUMB
+
+      document.getElementById("breadcrumbTitle").innerText =
+        png.title;
+
+      // DOWNLOAD BUTTON
+
+      const downloadBtn =
+        document.querySelector(".download-btn");
+
+      downloadBtn.href =
+        `${API}/api/pngs/${png.slug}/download`;
 
       downloadBtn.querySelector("span").innerText =
         `Download PNG (${png.width} × ${png.height})`;
 
-      /* Tags */
-      const tagsBox = document.querySelector(".tags");
+      // TAGS
+
+      const tagsBox =
+        document.querySelector(".tags");
+
       tagsBox.innerHTML = "";
+
       (png.tags || []).forEach(tag => {
-        const span = document.createElement("span");
+
+        const span =
+          document.createElement("span");
+
         span.innerText = tag;
+
         tagsBox.appendChild(span);
       });
 
-        document.getElementById("breadcrumbTitle").innerText = png.title;
+      // SEO
 
-        if (!document.querySelector('link[rel="preload"][as="image"]')) {
-          const preload = document.createElement("link");
-          preload.rel = "preload";
-          preload.as = "image";
-          preload.href = png.previewUrl || png.thumbUrl;
-          document.head.appendChild(preload);
-        }
+      document.title =
+        `${png.title} PNG Transparent Background Free Download`;
+
+      document
+        .querySelector('meta[name="description"]')
+        .setAttribute(
+          "content",
+          `Download ${png.title} PNG with transparent background in HD quality.`
+        );
+
     })
+
     .catch(() => {
-      document.querySelector(".image-wrapper").innerHTML =
-        "<p>Failed to load image</p>";
+
+      document.querySelector(".image-page").innerHTML = `
+        <div style="
+          text-align:center;
+          padding:100px 20px;
+          font-size:20px;
+          color:#64748b;
+        ">
+          Failed to load PNG image
+        </div>
+      `;
     });
 
 }

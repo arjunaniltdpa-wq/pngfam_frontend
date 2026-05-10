@@ -172,12 +172,6 @@
         id="searchPagination">
       </div>
 
-        <button class="page-btn active">1</button>
-        <button class="page-btn">2</button>
-        <button class="page-btn">3</button>
-
-      </div>
-
     </div>
 
   </div>
@@ -205,7 +199,7 @@ document.addEventListener("DOMContentLoaded", () => {
      CONFIG
   ========================== */
 const API_BASE = "https://pngfam-backend.onrender.com";
-const SEARCH_LIMIT = 50;
+const SEARCH_LIMIT = 20;
 const EXPLORE_LIMIT = 20;
 
 let searchPage = 1;
@@ -351,13 +345,32 @@ function renderPagination(total) {
   pagination.innerHTML = "";
 
   const totalPages =
-    Math.ceil(total / 50);
+    Math.ceil(total / SEARCH_LIMIT);
 
-  if (totalPages <= 1) return;
+  /* ONLY 1 PAGE */
+
+  if (totalPages <= 1) {
+
+    const btn =
+      document.createElement("button");
+
+    btn.className =
+      "page-btn active";
+
+    btn.innerText = "1";
+
+    pagination.appendChild(btn);
+
+    return;
+  }
+
+  /* MAX BUTTONS */
+
+  let maxPages = 5;
 
   for (
     let i = 1;
-    i <= totalPages;
+    i <= Math.min(totalPages, maxPages);
     i++
   ) {
 
@@ -387,8 +400,32 @@ function renderPagination(total) {
 
     pagination.appendChild(btn);
   }
-}
 
+  /* MANY PAGES */
+
+  if (totalPages > maxPages) {
+
+    const dots =
+      document.createElement("span");
+
+    dots.className = "page-dots";
+
+    dots.innerText = "...";
+
+    pagination.appendChild(dots);
+
+    const lastBtn =
+      document.createElement("button");
+
+    lastBtn.className =
+      "page-btn";
+
+    lastBtn.innerText =
+      totalPages;
+
+    pagination.appendChild(lastBtn);
+  }
+}
 /* =========================
     SEARCH RESULTS (50)
 ========================== */
@@ -440,17 +477,10 @@ function loadSearchResults() {
 /* =========================
     EXPLORE MORE (20)
 ========================== */
-function loadExploreMore() {
-  relatedWrapper.style.display = "block";
-  relatedGrid.innerHTML = "";
+relatedWrapper.style.display =
+  "block";
 
-  fetch(`${API_BASE}/api/pngs?limit=20`)
-    .then(res => res.json())
-    .then(data => {
-      data.forEach(png => renderCard(png, relatedGrid));
-      exploreBtn.style.display = "block";
-    });
-}
+loadExploreMore();
 
 /* =========================
     INIT

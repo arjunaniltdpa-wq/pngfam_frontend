@@ -34,6 +34,8 @@ body{
     linear-gradient(180deg,#f8fbff 0%,#ffffff 100%);
 
   border-bottom:1px solid #edf2f7;
+
+  isolation:isolate;
 }
 
 .header-banner{
@@ -53,7 +55,8 @@ body{
   width:100%;
   height:100%;
 
-  object-fit:fill;
+  object-fit:cover;
+  object-position:center;
 
   display:block;
 }
@@ -508,12 +511,17 @@ body{
 
 /* ================= RESPONSIVE ================= */
 
+
 @media(max-width:768px){
 
   .header{
-    padding:70px 16px 50px;
+    min-height:420px;
   }
 
+  .header-banner img{
+    object-position:center center;
+  }
+  
   .logo img{
     height:70px;
   }

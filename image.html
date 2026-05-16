@@ -13,16 +13,41 @@
   <link rel="canonical" id="canonicalLink" href="">
   <link rel="preload" as="image" href="/images/placeholder.png">
 
-  <meta property="og:image:alt" content="Transparent PNG image high quality">
   <meta property="og:type" content="website">
+
+  <meta property="og:site_name" content="PNGfam">
+
   <meta property="og:title" content="Free Transparent PNG Image Download">
-  <meta property="og:description" content="Download high-quality PNG with transparent background.">
-  <meta name="twitter:card" content="summary_large_image">
+
+  <meta property="og:description"
+  content="Download high-quality PNG with transparent background.">
+
+  <meta property="og:url" content="">
+
   <meta property="og:image" content="">
+
+  <meta property="og:image:secure_url" content="">
+
+  <meta property="og:image:type" content="image/webp">
+
   <meta property="og:image:width" content="1200">
+
   <meta property="og:image:height" content="1200">
-  <meta name="robots" content="index, follow, max-image-preview:large">
-  <meta name="googlebot" content="index, follow, max-image-preview:large">
+
+  <meta property="og:image:alt"
+  content="Transparent PNG image high quality">
+
+  <meta name="twitter:card"
+  content="summary_large_image">
+
+  <meta name="twitter:title"
+  content="Free Transparent PNG Image Download">
+
+  <meta name="twitter:description"
+  content="Download high-quality PNG with transparent background.">
+
+  <meta name="twitter:image"
+  content="">
 </head>
 
 <body>
@@ -176,14 +201,48 @@
 
   </section>
 
-  <div class="extra-seo">
-    <h2>About PNG Images</h2>
-    <p>
-      Transparent PNG images are widely used in graphic design, web design,
-      presentations, and marketing materials. These images come with no background,
-      making them perfect for creative projects, UI design, and digital content creation.
-    </p>
-  </div>
+  <section class="premium-seo">
+
+    <div class="premium-seo-inner">
+
+      <div class="seo-badge">
+        HD Transparent PNG
+      </div>
+
+      <h2>
+        High Quality Transparent PNG Images for Creative Projects
+      </h2>
+
+      <p>
+        Download premium transparent PNG images in HD quality for graphic design,
+        websites, branding, social media, UI design, YouTube thumbnails,
+        advertising creatives, presentations, and modern digital projects.
+        PNGFam provides professionally optimized transparent PNG graphics
+        with clean cutout edges and ultra sharp details.
+      </p>
+
+      <div class="seo-features">
+
+        <div class="seo-feature">
+          <strong>HD Resolution</strong>
+          <span>Optimized high quality transparent PNG graphics</span>
+        </div>
+
+        <div class="seo-feature">
+          <strong>Transparent Background</strong>
+          <span>Perfect clean transparent edges for design workflows</span>
+        </div>
+
+        <div class="seo-feature">
+          <strong>Commercial Ready</strong>
+          <span>Suitable for websites, branding, ads and content creation</span>
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
   
   <!-- RELATED IMAGES -->
   <section class="related-section">
@@ -203,7 +262,9 @@
   </section>
 
   <div class="more-wrapper">
-    <button id="moreBtn" class="more-btn">More PNGs</button>
+    <button id="moreBtn" class="more-btn">
+      Explore More
+    </button>
   </div>
 
   <section class="popular-section">
@@ -433,7 +494,10 @@ fetch(`${API}/api/pngs/related/${slug2}`)
   });
 
 document.getElementById("moreBtn").onclick = () => {
-  window.location.href = "/category/png";
+  window.location.href =
+    `/search?q=${encodeURIComponent(
+      document.querySelector(".image-title").innerText
+    )}`;
 };
 
 </script>

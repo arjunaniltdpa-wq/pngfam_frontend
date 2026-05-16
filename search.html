@@ -80,11 +80,17 @@
       </div>
 
       <h1 id="searchTitle">Leaf PNG Images</h1>
+
       <div class="related-tags" id="relatedTags"></div>
-      
+
+      <!-- ACTIVE FILTERS -->
+
+      <div class="active-filters" id="activeFilters"></div>
+
     </div>
 
     <div class="results-actions">
+
       <span class="results-count" id="resultsCount">
         0 results
       </span>
@@ -104,6 +110,7 @@
         </option>
 
       </select>
+
     </div>
 
   </div>
@@ -116,28 +123,73 @@
 
     <aside class="filter-sidebar">
 
+      <!-- CATEGORY -->
+
       <div class="filter-box">
+
         <h3>Category</h3>
 
-        <label><input type="checkbox"> Nature</label>
-        <label><input type="checkbox"> Plants</label>
-        <label><input type="checkbox"> Animals</label>
-        <label><input type="checkbox"> Flowers</label>
+        <label>
+          <input type="checkbox" value="Nature">
+          Nature
+        </label>
+
+        <label>
+          <input type="checkbox" value="Plants">
+          Plants
+        </label>
+
+        <label>
+          <input type="checkbox" value="Animals">
+          Animals
+        </label>
+
+        <label>
+          <input type="checkbox" value="Flowers">
+          Flowers
+        </label>
+
       </div>
 
+      <!-- ORIENTATION -->
+
       <div class="filter-box">
+
         <h3>Orientation</h3>
 
-        <label><input type="checkbox"> Square</label>
-        <label><input type="checkbox"> Vertical</label>
-        <label><input type="checkbox"> Horizontal</label>
+        <label>
+          <input type="checkbox" value="Square">
+          Square
+        </label>
+
+        <label>
+          <input type="checkbox" value="Vertical">
+          Vertical
+        </label>
+
+        <label>
+          <input type="checkbox" value="Horizontal">
+          Horizontal
+        </label>
+
       </div>
 
+      <!-- FILE TYPE -->
+
       <div class="filter-box">
+
         <h3>File Type</h3>
 
-        <label><input type="checkbox"> PNG</label>
-        <label><input type="checkbox"> Transparent PNG</label>
+        <label>
+          <input type="checkbox" value="PNG">
+          PNG
+        </label>
+
+        <label>
+          <input type="checkbox" value="Transparent PNG">
+          Transparent PNG
+        </label>
+
       </div>
 
     </aside>
@@ -217,6 +269,9 @@ const relatedGrid = document.getElementById("relatedGrid");
 const exploreBtn = document.getElementById("exploreBtnWrapper");
 
 let cleanKeyword = "";
+
+const activeFilters =
+  document.getElementById("activeFilters");
 
 function capitalizeWords(str) {
   return str.replace(/\b\w/g, char => char.toUpperCase());
@@ -550,6 +605,56 @@ function loadSearchResults() {
 /* =========================
     INIT
 ========================== */
+
+/* FILTER CHIPS */
+
+const filterCheckboxes =
+  document.querySelectorAll(
+    '.filter-sidebar input[type="checkbox"]'
+  );
+
+function renderFilterChips(){
+
+  activeFilters.innerHTML = "";
+
+  filterCheckboxes.forEach(checkbox => {
+
+    if(checkbox.checked){
+
+      const chip =
+        document.createElement("div");
+
+      chip.className =
+        "filter-chip";
+
+      chip.innerHTML = `
+        ${checkbox.value}
+        <button>×</button>
+      `;
+
+      chip.querySelector("button")
+        .onclick = () => {
+
+          checkbox.checked = false;
+
+          renderFilterChips();
+        };
+
+      activeFilters.appendChild(chip);
+    }
+  });
+}
+
+/* CHECKBOX EVENTS */
+
+filterCheckboxes.forEach(checkbox => {
+
+  checkbox.addEventListener(
+    "change",
+    renderFilterChips
+  );
+});
+
 loadSearchResults();
 
 });

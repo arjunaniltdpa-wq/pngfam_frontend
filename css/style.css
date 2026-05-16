@@ -250,28 +250,28 @@ body{
 /* ================= MASONRY ================= */
 
 .masonry{
-  column-count:5;
-  column-gap:22px;
+  display:grid;
+  grid-template-columns:repeat(5, 1fr);
+  gap:22px;
 }
 
 @media(max-width:1400px){
   .masonry{
-    column-count:4;
+    grid-template-columns:repeat(4, 1fr);
   }
 }
 
 @media(max-width:1000px){
   .masonry{
-    column-count:3;
+    grid-template-columns:repeat(3, 1fr);
   }
 }
 
 @media(max-width:700px){
   .masonry{
-    column-count:2;
+    grid-template-columns:repeat(2, 1fr);
   }
 }
-
 /* ================= CARD ================= */
 
 .card-link{
@@ -521,7 +521,7 @@ body{
   .header-banner img{
     object-position:center center;
   }
-  
+
   .logo img{
     height:70px;
   }

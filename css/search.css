@@ -613,3 +613,42 @@ body{
 
   color:#64748b;
 }
+
+/* ACTIVE FILTER CHIPS */
+
+.active-filters{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+
+  margin-top:18px;
+}
+
+.filter-chip{
+  display:flex;
+  align-items:center;
+  gap:10px;
+
+  background:#2563eb;
+  color:#fff;
+
+  padding:10px 16px;
+
+  border-radius:999px;
+
+  font-size:14px;
+  font-weight:600;
+}
+
+.filter-chip button{
+  border:none;
+  background:none;
+
+  color:#fff;
+
+  cursor:pointer;
+
+  font-size:18px;
+
+  line-height:1;
+}

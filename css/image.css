@@ -367,16 +367,54 @@ body{
   gap:12px;
 }
 
-.tags span{
-  padding:10px 16px;
+.tags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:14px;
+}
+
+.tags .tag-link{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+
+  padding:12px 18px;
 
   border-radius:999px;
 
-  background:#eef2f7;
+  background:
+    linear-gradient(
+      135deg,
+      #ffffff 0%,
+      #f3f7ff 100%
+    );
 
-  color:#475569;
+  border:1px solid #dbeafe;
+
+  text-decoration:none;
+
+  color:#2563eb;
 
   font-size:14px;
+  font-weight:600;
+
+  transition:.25s ease;
+
+  box-shadow:
+    0 4px 12px rgba(37,99,235,.06);
+}
+
+.tags .tag-link:hover{
+  transform:translateY(-2px);
+
+  background:#2563eb;
+
+  color:#fff;
+
+  border-color:#2563eb;
+
+  box-shadow:
+    0 10px 24px rgba(37,99,235,.18);
 }
 
 /* PREMIUM SEO SECTION */
@@ -852,11 +890,135 @@ body{
   transform:translateY(0);
 }
 
-.dynamic-seo {
-  margin-top: 40px;
-  padding: 30px;
-  background: #fff;
-  border-radius: 20px;
+.search-header{
+  transition:transform .35s ease;
+}
+
+.search-header.hide-header{
+  transform:translateY(-100%);
+}
+
+.dynamic-seo{
+  max-width:1500px;
+
+  margin:0 auto 80px;
+
+  padding:0 24px;
+}
+
+.dynamic-seo-content{
+  background:
+    linear-gradient(
+      135deg,
+      #ffffff 0%,
+      #f8fbff 100%
+    );
+
+  border:1px solid #edf2f7;
+
+  border-radius:36px;
+
+  padding:50px;
+
+  box-shadow:
+    0 20px 60px rgba(15,23,42,.05);
+}
+
+.seo-article h2{
+  font-size:42px;
+
+  line-height:1.1;
+
+  font-weight:900;
+
+  letter-spacing:-1.5px;
+
+  margin-bottom:24px;
+}
+
+.seo-article h3{
+  font-size:24px;
+
+  margin-top:42px;
+  margin-bottom:18px;
+
+  font-weight:800;
+}
+
+.seo-article p{
+  font-size:17px;
+
+  line-height:1.9;
+
+  color:#475569;
+}
+
+.keyword-cloud{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+}
+
+.keyword-cloud{
+  font-weight:600;
+}
+
+.seo-table{
+  width:100%;
+
+  border-collapse:collapse;
+
+  margin-top:20px;
+
+  overflow:hidden;
+
+  border-radius:18px;
+}
+
+.seo-table td{
+  border:1px solid #edf2f7;
+
+  padding:16px;
+
+  font-size:15px;
+}
+
+.related-searches{
+  display:flex;
+  flex-wrap:wrap;
+
+  gap:14px;
+
+  margin-top:18px;
+}
+
+.related-searches a{
+  padding:12px 18px;
+
+  border-radius:999px;
+
+  background:#eff6ff;
+
+  color:#2563eb;
+
+  text-decoration:none;
+
+  font-weight:600;
+
+  transition:.2s ease;
+}
+
+.related-searches a:hover{
+  background:#2563eb;
+
+  color:#fff;
+}
+
+.faq-box h4{
+  font-size:18px;
+
+  margin-top:28px;
+  margin-bottom:10px;
 }
 
 .seo-article h2,

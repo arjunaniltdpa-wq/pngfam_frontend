@@ -599,8 +599,6 @@ body{
 /* CARD IMAGE */
 
 .card-image{
-  aspect-ratio:1/1;
-
   display:flex;
   align-items:center;
   justify-content:center;
@@ -609,6 +607,8 @@ body{
 
   overflow:hidden;
 
+  padding:14px;
+
   background-image:
     linear-gradient(45deg,#f3f4f6 25%,transparent 25%),
     linear-gradient(-45deg,#f3f4f6 25%,transparent 25%),
@@ -616,15 +616,27 @@ body{
     linear-gradient(-45deg,transparent 75%,#f3f4f6 75%);
 
   background-size:24px 24px;
-}
 
+  min-height:220px;
+}
 /* CARD IMG */
 
 .card img{
-  width:100%;
-  height:100%;
+  max-width:100%;
+  max-height:320px;
+
+  width:auto;
+  height:auto;
 
   object-fit:contain;
+
+  display:block;
+}
+
+.card-link{
+  text-decoration:none;
+  color:inherit;
+  display:block;
 }
 
 /* TITLE */

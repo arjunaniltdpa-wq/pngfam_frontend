@@ -67,7 +67,7 @@
         <input type="text" id="searchInput" placeholder="Search PNG images..." />
 
         <span class="search-icon">
-          <img src="images/search.png" alt="Search">
+          <img src="/images/search.png" alt="Search">
         </span>
       </div>
 
@@ -450,17 +450,15 @@ fetch(`${API}/api/pngs/related/${slug2}`)
     grid.innerHTML = "";
 
     data.forEach(png => {
-      const card = document.createElement("div");
-      card.className = "card";
-
+      const card = document.createElement("a");
+      card.className = "card card-link";
+      card.href = `/image/${png.slug}`;
       card.innerHTML = `
         <div class="card-image">
           <img loading="lazy" src="${png.thumbUrl}" alt="${png.title} transparent PNG free download">
         </div>
         <p class="card-title">
-          <a href="/image/${png.slug}">
-            ${png.title}
-          </a>
+          ${png.title}
         </p>
       `;
 

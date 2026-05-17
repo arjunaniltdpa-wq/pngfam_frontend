@@ -201,44 +201,11 @@
 
   </section>
 
-  <section class="premium-seo">
+  <section class="dynamic-seo">
 
-    <div class="premium-seo-inner">
+    <div class="dynamic-seo-content">
 
-      <div class="seo-badge">
-        HD Transparent PNG
-      </div>
-
-      <h2>
-        High Quality Transparent PNG Images for Creative Projects
-      </h2>
-
-      <p>
-        Download premium transparent PNG images in HD quality for graphic design,
-        websites, branding, social media, UI design, YouTube thumbnails,
-        advertising creatives, presentations, and modern digital projects.
-        PNGFam provides professionally optimized transparent PNG graphics
-        with clean cutout edges and ultra sharp details.
-      </p>
-
-      <div class="seo-features">
-
-        <div class="seo-feature">
-          <strong>HD Resolution</strong>
-          <span>Optimized high quality transparent PNG graphics</span>
-        </div>
-
-        <div class="seo-feature">
-          <strong>Transparent Background</strong>
-          <span>Perfect clean transparent edges for design workflows</span>
-        </div>
-
-        <div class="seo-feature">
-          <strong>Commercial Ready</strong>
-          <span>Suitable for websites, branding, ads and content creation</span>
-        </div>
-
-      </div>
+      <div id="dynamicSeoContent"></div>
 
     </div>
 
@@ -254,6 +221,7 @@
       <a href="/category/png" class="view-all">
         View all →
       </a>
+
 
     </div>
 
@@ -406,9 +374,16 @@ if (!slug) {
       const tagsBox = document.querySelector(".tags");
       tagsBox.innerHTML = "";
       (png.tags || []).forEach(tag => {
-        const span = document.createElement("span");
-        span.innerText = tag;
-        tagsBox.appendChild(span);
+        const link = document.createElement("a");
+
+        link.href =
+        `/search?q=${encodeURIComponent(tag)}`;
+
+        link.className = "tag-link";
+
+        link.innerText = tag;
+
+        tagsBox.appendChild(link);
       });
 
         document.getElementById("breadcrumbTitle").innerText = png.title;

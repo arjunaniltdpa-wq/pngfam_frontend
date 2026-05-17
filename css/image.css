@@ -851,3 +851,51 @@ body{
 .search-header.show-header{
   transform:translateY(0);
 }
+
+.dynamic-seo {
+  margin-top: 40px;
+  padding: 30px;
+  background: #fff;
+  border-radius: 20px;
+}
+
+.seo-article h2,
+.seo-article h3 {
+  margin-top: 25px;
+  margin-bottom: 15px;
+}
+
+.seo-article p {
+  line-height: 1.8;
+  color: #555;
+}
+
+.seo-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.seo-table td {
+  border: 1px solid #eee;
+  padding: 12px;
+}
+
+.related-searches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.related-searches a {
+  padding: 8px 14px;
+  background: #f5f5f5;
+  border-radius: 999px;
+  text-decoration: none;
+  color: #222;
+}
+
+.faq-box h4 {
+  margin-top: 20px;
+}

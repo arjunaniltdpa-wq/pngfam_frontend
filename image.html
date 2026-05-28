@@ -12,10 +12,6 @@
   <link rel="stylesheet" href="/css/search.css" />
   <link rel="canonical" id="canonicalLink" href="">
   <link rel="preload" as="image" href="/images/placeholder.png">
-  <link rel="license"
-  href="https://www.pngfam.com/license">
-
-  <meta name="robots" content="index,follow,max-image-preview:large">
 
   <meta property="og:type" content="website">
 
@@ -52,8 +48,6 @@
 
   <meta name="twitter:image"
   content="">
-
-
 </head>
 
 <body>
@@ -98,6 +92,13 @@
         <a href="/search?q=background png">Backgrounds</a>
         <a href="/search?q=mockup png">Mockups</a>
 
+        <!-- DUPLICATE -->
+
+        <a href="/search?q=car png">Cars</a>
+        <a href="/search?q=anime png">Anime</a>
+        <a href="/search?q=gaming png">Gaming</a>
+        <a href="/search?q=flower png">Flowers</a>
+
       </div>
 
     </section>
@@ -106,7 +107,7 @@
   <nav class="breadcrumbs">
     <a href="/">Home</a> ›
     <a href="/category/png">PNG Images</a> ›
-    <span id="breadcrumbTitle">{{BREADCRUMB}}</span>
+    <span id="breadcrumbTitle">Image</span>
   </nav>
 
   <!-- IMAGE PAGE -->
@@ -120,7 +121,17 @@
 
         <div class="preview-card">
 
-          {{MAIN_IMAGE}}
+          <div class="image-preview checker-bg">
+
+            <img
+              id="mainPreview"
+              src="/images/placeholder.png"
+              alt="Transparent PNG image"
+              loading="lazy"
+              decoding="async"
+            >
+
+          </div>
 
         </div>
 
@@ -143,7 +154,7 @@
         <div class="download-card">
 
           <h1 class="image-title">
-            {{TITLE}}
+            Free Transparent PNG
           </h1>
 
           <div class="mini-tags">
@@ -151,13 +162,11 @@
             <span>Transparent</span>
           </div>
 
-          <div id="keywordLinks"></div>
-
           <div class="image-meta">
 
             <div class="meta-row">
               <span>Dimensions</span>
-              <strong id="imgDimensions">{{DIMENSIONS}}</strong>
+              <strong id="imgDimensions">2400 × 2400</strong>
             </div>
 
             <div class="meta-row">
@@ -291,6 +300,8 @@
 </footer>
 <script>
 
+const API = "https://pngfam-backend.onrender.com";
+
 document.addEventListener("DOMContentLoaded", () => {
 
   const searchInput = document.getElementById("searchInput");
@@ -315,6 +326,82 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 });
+</script>
+
+
+<!-- MAIN IMAGE LOAD -->
+<script>
+// Extract slug from clean URL: /image/:slug
+let slug = window.location.pathname.split("/").pop();
+
+// Fallback for old URLs: image.html?slug=xxx
+if (!slug || slug === "image.html") {
+  const params = new URLSearchParams(window.location.search);
+  slug = params.get("slug");
+}
+
+console.log("Slug:", slug); // debug
+if (!slug) {
+  window.location.href = "/";
+} else {
+
+  fetch(`${API}/api/pngs/${slug}`)
+    .then(res => {
+      if (!res.ok) throw new Error("Not found");
+      return res.json();
+    })
+    .then(png => {
+
+      /* 🔥 USE PREVIEW / WEBP IMAGE */
+      const img = document.getElementById("mainPreview");
+      img.src = png.previewUrl || png.originalUrl;
+
+      document.querySelector(".image-title").innerText =
+        png.title;
+
+      document.getElementById("imgDimensions").innerText =
+        `${png.width} × ${png.height}`;
+
+      const downloadBtn = document.querySelector(".download-btn");
+
+      downloadBtn.href = `${API}/api/pngs/${png.slug}/download`;
+      downloadBtn.removeAttribute("download"); // important
+
+      downloadBtn.querySelector("span").innerText =
+        `Download PNG (${png.width} × ${png.height})`;
+
+      /* Tags */
+      const tagsBox = document.querySelector(".tags");
+      tagsBox.innerHTML = "";
+      (png.tags || []).forEach(tag => {
+        const link = document.createElement("a");
+
+        link.href =
+        `/search?q=${encodeURIComponent(tag)}`;
+
+        link.className = "tag-link";
+
+        link.innerText = tag;
+
+        tagsBox.appendChild(link);
+      });
+
+        document.getElementById("breadcrumbTitle").innerText = png.title;
+
+        if (!document.querySelector('link[rel="preload"][as="image"]')) {
+          const preload = document.createElement("link");
+          preload.rel = "preload";
+          preload.as = "image";
+          preload.href = png.previewUrl || png.thumbUrl;
+          document.head.appendChild(preload);
+        }
+    })
+    .catch(() => {
+      document.querySelector(".image-wrapper").innerHTML =
+        "<p>Failed to load image</p>";
+    });
+
+}
 </script>
 
 <script>
@@ -349,6 +436,42 @@ window.addEventListener("scroll", () => {
 
   lastScroll = currentScroll;
 });
+
+</script>
+
+<!-- RELATED IMAGES (SAFE FALLBACK) -->
+<script>
+  const slug2 = window.location.pathname.split("/").pop();
+
+fetch(`${API}/api/pngs/related/${slug2}`)
+  .then(res => res.json())
+  .then(data => {
+    const grid = document.querySelector(".related-section .grid");
+    grid.innerHTML = "";
+
+    data.forEach(png => {
+      const card = document.createElement("a");
+      card.className = "card card-link";
+      card.href = `/image/${png.slug}`;
+      card.innerHTML = `
+        <div class="card-image">
+          <img loading="lazy" src="${png.thumbUrl}" alt="${png.title} transparent PNG free download">
+        </div>
+        <p class="card-title">
+          ${png.title}
+        </p>
+      `;
+
+      grid.appendChild(card);
+    });
+  });
+
+document.getElementById("moreBtn").onclick = () => {
+  window.location.href =
+    `/search?q=${encodeURIComponent(
+      document.querySelector(".image-title").innerText
+    )}`;
+};
 
 </script>
 

@@ -333,12 +333,21 @@ document.addEventListener("DOMContentLoaded", () => {
 <!-- MAIN IMAGE LOAD -->
 <script>
 // Extract slug from clean URL: /image/:slug
-let slug = window.location.pathname.split("/").pop();
+const pathParts =
+window.location.pathname.split("/");
 
-// Fallback for old URLs: image.html?slug=xxx
-if (!slug || slug === "image.html") {
-  const params = new URLSearchParams(window.location.search);
-  slug = params.get("slug");
+let slug =
+pathParts[pathParts.length - 1];
+
+if (
+  !slug ||
+  slug === "image.html"
+) {
+  const params =
+  new URLSearchParams(window.location.search);
+
+  slug =
+  params.get("slug");
 }
 
 console.log("Slug:", slug); // debug
@@ -442,7 +451,7 @@ window.addEventListener("scroll", () => {
 
 <!-- RELATED IMAGES (SAFE FALLBACK) -->
 <script>
-  const slug2 = window.location.pathname.split("/").pop();
+const slug2 = slug;
 
 fetch(`${API}/api/pngs/related/${slug2}`)
   .then(res => res.json())

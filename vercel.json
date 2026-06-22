@@ -13,6 +13,7 @@
       "source": "/image/:slug",
       "destination": "https://pngfam-backend.onrender.com/image/:slug"
     },
+
     {
       "source": "/sitemap.xml",
       "destination": "https://pngfam-backend.onrender.com/sitemap.xml"

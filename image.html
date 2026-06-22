@@ -299,6 +299,7 @@
   </div>
 
 </footer>
+
 <script>
 
 const API = "https://pngfam-backend.onrender.com";
@@ -341,13 +342,11 @@ pathParts[pathParts.length - 1];
 
 if (
   !slug ||
-  slug === "image.html"
+  slug === "image.html" ||
+  slug.includes(".html")
 ) {
-  const params =
-  new URLSearchParams(window.location.search);
-
-  slug =
-  params.get("slug");
+  window.location.href = "/";
+  return;
 }
 
 console.log("Slug:", slug); // debug
